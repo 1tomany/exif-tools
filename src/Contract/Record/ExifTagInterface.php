@@ -20,5 +20,5 @@ interface ExifTagInterface
     /**
      * @return ExifTagValue
      */
-    public function getValue(): int|string|array;
+    public function getValue(): bool|int|float|string|array|null;
 }

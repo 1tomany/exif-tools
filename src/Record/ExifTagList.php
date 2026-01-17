@@ -6,6 +6,7 @@ use OneToMany\ExifTools\Contract\Record\ExifTagInterface;
 use OneToMany\ExifTools\Contract\Record\ExifTagListInterface;
 
 use function array_filter;
+use function array_values;
 use function count;
 
 /**
@@ -33,7 +34,7 @@ readonly class ExifTagList implements ExifTagListInterface, \Countable, \Iterato
      */
     public function has(string $tag): bool
     {
-        return 0 !== count(array_filter($this->tags, fn ($t) => $t->isTag($tag)));
+        return null !== $this->get($tag);
     }
 
     /**
@@ -41,7 +42,7 @@ readonly class ExifTagList implements ExifTagListInterface, \Countable, \Iterato
      */
     public function get(string $tag): ?ExifTagInterface
     {
-        throw new \Exception('Not implemented');
+        return array_values(array_filter($this->tags, fn ($t) => $t->isTag($tag)))[0] ?? null;
     }
 
     /**
