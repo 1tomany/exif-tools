@@ -5,6 +5,8 @@ namespace OneToMany\ExifTools\Reader;
 use OneToMany\ExifTools\Contract\Reader\ExifTagReaderInterface;
 use OneToMany\ExifTools\Contract\Record\ExifTagListInterface;
 use OneToMany\ExifTools\Exception\InvalidArgumentException;
+use OneToMany\ExifTools\Record\ExifTag;
+use OneToMany\ExifTools\Record\ExifTagList;
 
 use function exif_imagetype;
 use function exif_read_data;
@@ -31,10 +33,18 @@ class ExifTagReader implements ExifTagReaderInterface
             throw new InvalidArgumentException(sprintf('The file "%s" is not a valid image.', $path));
         }
 
-        $tags = @exif_read_data($path, null, false, false);
+        $exifTags = @exif_read_data($path, null, false, false);
 
-        if (false === $tags) {
+        if (false === $exifTags) {
             throw new InvalidArgumentException(sprintf('Reading the EXIF data from the file "%s" failed.', $path));
         }
+
+        $exifTagList = [];
+
+        foreach ($exifTags as $tag => $value) {
+            $exifTagList[] = new ExifTag($tag, $value);
+        }
+
+        return new ExifTagList($exifTagList);
     }
 }

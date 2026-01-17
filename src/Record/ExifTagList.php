@@ -5,6 +5,7 @@ namespace OneToMany\ExifTools\Record;
 use OneToMany\ExifTools\Contract\Record\ExifTagInterface;
 use OneToMany\ExifTools\Contract\Record\ExifTagListInterface;
 
+use function array_filter;
 use function count;
 
 /**
@@ -32,7 +33,7 @@ readonly class ExifTagList implements ExifTagListInterface, \Countable, \Iterato
      */
     public function has(string $tag): bool
     {
-        throw new \Exception('Not implemented');
+        return 0 !== count(array_filter($this->tags, fn ($t) => $t->isTag($tag)));
     }
 
     /**
