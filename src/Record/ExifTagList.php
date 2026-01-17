@@ -20,6 +20,30 @@ readonly class ExifTagList implements ExifTagListInterface, \Countable, \Iterato
     }
 
     /**
+     * @see OneToMany\ExifTools\Contract\Record\ExifTagListInterface
+     */
+    public function all(): array
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @see OneToMany\ExifTools\Contract\Record\ExifTagListInterface
+     */
+    public function has(string $tag): bool
+    {
+        throw new \Exception('Not implemented');
+    }
+
+    /**
+     * @see OneToMany\ExifTools\Contract\Record\ExifTagListInterface
+     */
+    public function get(string $tag): ?ExifTagInterface
+    {
+        throw new \Exception('Not implemented');
+    }
+
+    /**
      * @see \IteratorAggregate
      *
      * @return \ArrayIterator<int, ExifTagInterface>

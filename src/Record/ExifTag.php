@@ -4,6 +4,9 @@ namespace OneToMany\ExifTools\Record;
 
 use OneToMany\ExifTools\Contract\Record\ExifTagInterface;
 
+use function strtolower;
+use function trim;
+
 /**
  * @phpstan-import-type ExifTagValue from ExifTagInterface
  */
@@ -25,6 +28,14 @@ final readonly class ExifTag implements ExifTagInterface
     public function getTag(): string
     {
         return $this->tag;
+    }
+
+    /**
+     * @see OneToMany\ExifTools\Contract\Record\ExifTagInterface
+     */
+    public function isTag(string $tag): bool
+    {
+        return strtolower(trim($tag)) === $this->tag;
     }
 
     /**

@@ -13,6 +13,11 @@ interface ExifTagInterface
     public function getTag(): string;
 
     /**
+     * @param non-empty-string $tag
+     */
+    public function isTag(string $tag): bool;
+
+    /**
      * @return ExifTagValue
      */
     public function getValue(): int|string|array;
