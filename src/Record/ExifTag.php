@@ -19,13 +19,16 @@ final readonly class ExifTag implements ExifTagInterface
     ) {
     }
 
+    /**
+     * @see OneToMany\ExifTools\Contract\Record\ExifTagInterface
+     */
     public function getTag(): string
     {
         return $this->tag;
     }
 
     /**
-     * @return ExifTagValue
+     * @see OneToMany\ExifTools\Contract\Record\ExifTagInterface
      */
     public function getValue(): int|string|array
     {
