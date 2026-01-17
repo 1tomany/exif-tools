@@ -15,7 +15,7 @@ readonly class ExifTagList implements ExifTagListInterface, \Countable, \Iterato
     /**
      * @param list<ExifTagInterface> $tags
      */
-    public function __construct(public array $tags)
+    public function __construct(protected array $tags)
     {
     }
 
