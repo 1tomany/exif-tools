@@ -11,6 +11,7 @@ use function count;
 use function ctype_digit;
 use function is_int;
 use function is_string;
+use function ord;
 use function str_contains;
 use function strlen;
 use function trim;
@@ -67,7 +68,7 @@ final readonly class ExifValue implements ExifValueInterface
                 return (int) $value;
             }
 
-            // Convert NUL bytes to a scalar or list
+            // Attempt to conver NUL bytes
             if (str_contains($value, "\x00")) {
                 $nulByteList = [];
 
@@ -79,14 +80,14 @@ final readonly class ExifValue implements ExifValueInterface
                     return $nulByteList[0];
                 }
 
-                return ExifList::create($nulByteList);
+                return new ExifList($nulByteList);
             }
 
             return trim($value);
         }
 
         if (array_is_list($value)) {
-            return ExifList::create($value);
+            return new ExifList($value);
         }
 
         return ExifMap::create($value);

@@ -14,18 +14,16 @@ use function count;
 final readonly class ExifList implements \Countable, \IteratorAggregate, ExifListInterface
 {
     /**
-     * @param list<ExifValueInterface> $values
+     * @var list<ExifValueInterface>
      */
-    public function __construct(public array $values)
-    {
-    }
+    public array $values;
 
     /**
      * @param list<int|string> $values
      */
-    public static function create(array $values): self
+    public function __construct(array $values)
     {
-        return new self(array_map(fn ($v) => new ExifValue($v), $values));
+        $this->values = array_map(fn ($v) => new ExifValue($v), $values);
     }
 
     public function all(): array
@@ -48,7 +46,7 @@ final readonly class ExifList implements \Countable, \IteratorAggregate, ExifLis
      */
     public function getIterator(): \ArrayIterator
     {
-        return new \ArrayIterator($this->values);
+        return new \ArrayIterator($this->values); // @phpstan-ignore-line
     }
 
     public function count(): int
