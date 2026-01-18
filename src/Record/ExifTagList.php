@@ -20,7 +20,7 @@ class ExifTagList implements ExifTagListInterface, \Countable, \IteratorAggregat
     private array $tags = [];
 
     /**
-     * @param array<non-empty-string, int|string|list<int|string>|array<non-empty-string, int|string>> $tags
+     * @param array<string, int|string|list<int|string>|array<string, int|string>> $tags
      */
     public function __construct(array $tags)
     {
@@ -50,7 +50,7 @@ class ExifTagList implements ExifTagListInterface, \Countable, \IteratorAggregat
      */
     public function get(string $tag): ?ExifTagInterface
     {
-        return array_values(array_filter($this->tags, fn ($t) => $t->isTag($tag)))[0] ?? null;
+        return array_values(array_filter($this->tags, fn ($t) => $t->is($tag)))[0] ?? null;
     }
 
     /**

@@ -25,7 +25,7 @@ final readonly class ExifTag implements ExifTagInterface
     public int|string|array|ExifTagListInterface $value;
 
     /**
-     * @param int|string|list<int|string>|array<non-empty-string, int|string> $value
+     * @param int|string|list<int|string>|array<string, int|string> $value
      */
     public function __construct(string $tag, int|string|array $value)
     {
@@ -59,7 +59,7 @@ final readonly class ExifTag implements ExifTagInterface
     /**
      * @see OneToMany\ExifTools\Contract\Record\ExifTagInterface
      */
-    public function isTag(string $tag): bool
+    public function is(string $tag): bool
     {
         return strtolower(trim($tag)) === strtolower($this->tag);
     }

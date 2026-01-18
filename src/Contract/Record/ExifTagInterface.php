@@ -12,7 +12,7 @@ interface ExifTagInterface
     /**
      * @param non-empty-string $tag
      */
-    public function isTag(string $tag): bool;
+    public function is(string $tag): bool;
 
     /**
      * @return int|string|list<int|string>|ExifTagListInterface

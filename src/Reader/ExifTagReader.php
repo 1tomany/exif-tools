@@ -33,7 +33,7 @@ class ExifTagReader implements ExifTagReaderInterface
         }
 
         /**
-         * @var false|array<non-empty-string, int|string|list<int|string>|array<non-empty-string, int|string>> $exifTags
+         * @var false|array<string, int|string|list<int|string>|array<string, int|string>> $exifTags
          */
         $exifTags = @exif_read_data($path, null, false, false);
 
