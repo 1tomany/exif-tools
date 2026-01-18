@@ -6,6 +6,8 @@ use function array_map;
 use function count;
 
 /**
+ * @phpstan-import-type ExifValueList from ExifValue
+ *
  * @implements \IteratorAggregate<int, ExifValue>
  */
 final readonly class ExifList implements \Countable, \IteratorAggregate
@@ -16,7 +18,7 @@ final readonly class ExifList implements \Countable, \IteratorAggregate
     private array $values;
 
     /**
-     * @param list<int|string> $values
+     * @param ExifValueList $values
      */
     public function __construct(array $values)
     {

@@ -13,14 +13,15 @@ use function strlen;
 use function trim;
 
 /**
- * @phpstan-type ExifValueMap array<non-empty-string, int|string>
+ * @phpstan-type ExifValueList list<int|string>
+ * @phpstan-type ExifValueMap array<int|string, int|string>
  */
 final readonly class ExifValue
 {
     private int|string|ExifList|ExifMap $value;
 
     /**
-     * @param int|string|list<int|string>|ExifValueMap $value
+     * @param int|string|ExifValueList|ExifValueMap $value
      */
     public function __construct(int|string|array $value)
     {
@@ -65,7 +66,7 @@ final readonly class ExifValue
     }
 
     /**
-     * @param int|string|list<int|string>|ExifValueMap $value
+     * @param int|string|ExifValueList|ExifValueMap $value
      */
     private function clean(int|string|array $value): int|string|ExifList|ExifMap
     {
@@ -101,6 +102,6 @@ final readonly class ExifValue
             return new ExifList($value);
         }
 
-        return new ExifMap($value); // @phpstan-ignore-line
+        return new ExifMap($value);
     }
 }

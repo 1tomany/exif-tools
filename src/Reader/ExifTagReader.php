@@ -5,6 +5,7 @@ namespace OneToMany\ExifTools\Reader;
 use OneToMany\ExifTools\Contract\Reader\ExifTagReaderInterface;
 use OneToMany\ExifTools\Exception\InvalidArgumentException;
 use OneToMany\ExifTools\Record\ExifMap;
+use OneToMany\ExifTools\Record\ExifValue;
 
 use function exif_imagetype;
 use function exif_read_data;
@@ -12,6 +13,9 @@ use function is_file;
 use function is_readable;
 use function sprintf;
 
+/**
+ * @phpstan-import-type ExifValueMap from ExifValue
+ */
 class ExifTagReader implements ExifTagReaderInterface
 {
     public function __construct()
@@ -32,7 +36,7 @@ class ExifTagReader implements ExifTagReaderInterface
         }
 
         /**
-         * @var false|array<non-empty-string, int|string|list<int|string>|array<non-empty-string, int|string>> $exifTags
+         * @var false|array<non-empty-string, int|string|list<int|string>|ExifValueMap> $exifTags
          */
         $exifTags = @exif_read_data($path, null, false, false);
 

@@ -9,17 +9,20 @@ use function array_map;
 use function count;
 
 /**
- * @implements \IteratorAggregate<non-empty-string, ExifValue>
+ * @phpstan-import-type ExifValueList from ExifValue
+ * @phpstan-import-type ExifValueMap from ExifValue
+ *
+ * @implements \IteratorAggregate<int|string, ExifValue>
  */
 final readonly class ExifMap implements \Countable, \IteratorAggregate
 {
     /**
-     * @var array<non-empty-string, ExifValue>
+     * @var array<int|string, ExifValue>
      */
     private array $values;
 
     /**
-     * @param array<non-empty-string, int|string|list<int|string>|array<non-empty-string, int|string>> $values
+     * @param array<int|string, int|string|ExifValueList|ExifValueMap> $values
      */
     public function __construct(array $values)
     {
@@ -27,7 +30,7 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate
     }
 
     /**
-     * @return array<non-empty-string, ExifValue>
+     * @return array<int|string, ExifValue>
      */
     public function all(): array
     {
@@ -55,7 +58,7 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate
     /**
      * @see \IteratorAggregate
      *
-     * @return \ArrayIterator<string, ExifValue>
+     * @return \ArrayIterator<int|string, ExifValue>
      */
     public function getIterator(): \ArrayIterator
     {
@@ -63,7 +66,7 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate
     }
 
     /**
-     * @return array<non-empty-string, int|string|ExifList|ExifMap>
+     * @return array<int|string, int|string|ExifList|ExifMap>
      */
     public function toArray(): array
     {
