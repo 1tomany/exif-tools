@@ -90,6 +90,6 @@ final readonly class ExifValue implements ExifValueInterface
             return new ExifList($value);
         }
 
-        return ExifMap::create($value);
+        return new ExifMap($value);
     }
 }

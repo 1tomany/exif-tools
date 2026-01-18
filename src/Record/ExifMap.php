@@ -5,30 +5,25 @@ namespace OneToMany\ExifTools\Record;
 use OneToMany\ExifTools\Contract\Record\ExifMapInterface;
 use OneToMany\ExifTools\Contract\Record\ExifValueInterface;
 
+use function array_combine;
 use function array_key_exists;
+use function array_keys;
+use function array_map;
 use function count;
 
 final readonly class ExifMap implements \Countable, ExifMapInterface
 {
     /**
-     * @param array<non-empty-string, ExifValueInterface> $values
+     * @var array<non-empty-string, ExifValueInterface>
      */
-    public function __construct(public array $values)
-    {
-    }
+    public array $values;
 
     /**
      * @param array<non-empty-string, int|string|list<int|string>|array<non-empty-string, int|string>> $values
      */
-    public static function create(array $values): self
+    public function __construct(array $values)
     {
-        $exifMap = [];
-
-        foreach ($values as $key => $value) {
-            $exifMap[$key] = new ExifValue($value);
-        }
-
-        return new self($exifMap);
+        $this->values = array_combine(array_keys($values), array_map(fn ($v) => new ExifValue($v), $values));
     }
 
     public function all(): array

@@ -41,6 +41,6 @@ class ExifTagReader implements ExifTagReaderInterface
             throw new InvalidArgumentException(sprintf('Reading the EXIF data from the file "%s" failed.', $path));
         }
 
-        return ExifMap::create($exifTags);
+        return new ExifMap($exifTags);
     }
 }
