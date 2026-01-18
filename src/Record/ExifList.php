@@ -9,6 +9,7 @@ use function array_map;
 use function count;
 
 /**
+ * @template-covariant ExifValueInterface
  * @implements \IteratorAggregate<int, ExifValueInterface>
  */
 final readonly class ExifList implements \Countable, \IteratorAggregate, ExifListInterface
@@ -46,7 +47,7 @@ final readonly class ExifList implements \Countable, \IteratorAggregate, ExifLis
      */
     public function getIterator(): \ArrayIterator
     {
-        return new \ArrayIterator($this->values); // @phpstan-ignore-line
+        return new \ArrayIterator($this->values);
     }
 
     public function count(): int
