@@ -90,6 +90,6 @@ final readonly class ExifValue implements ExifValueInterface
             return new ExifList($value);
         }
 
-        return new ExifMap($value);
+        return new ExifMap($value); // @phpstan-ignore-line
     }
 }
