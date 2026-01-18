@@ -58,4 +58,9 @@ final readonly class ExifList implements \Countable, \IteratorAggregate
     {
         return new \ArrayIterator($this->values);
     }
+
+    public function toArray(): array
+    {
+        return array_map(fn ($v) => $v->toPrimitive(), $this->values);
+    }
 }
