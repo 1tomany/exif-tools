@@ -38,34 +38,6 @@ final readonly class ExifValue
         return $this->value;
     }
 
-    public function asDecimal(): ?float
-    {
-        if ($this->isList() || $this->isMap()) {
-            throw new LogicException('Lists and maps cannot be converted to decimals.');
-        }
-
-        if ($this->isInt()) {
-            return (float) $this->value;
-        }
-
-        if (empty($this->value)) {
-            return null;
-        }
-
-        // EXIF encodes floats as a rational number
-        if (1 === substr_count($this->value, '/')) {
-            [$num, $den] = explode('/', $this->value, 2);
-
-            if (!(float) $den) {
-                return null;
-            }
-
-            return (float) $num / (float) $den;
-        }
-
-        return is_numeric($this->value) ? (float) $this->value : null;
-    }
-
     /**
      * @return int|string|ExifValueList|ExifValueMap
      */
@@ -114,6 +86,39 @@ final readonly class ExifValue
     public function isMap(): bool
     {
         return $this->value instanceof ExifMap;
+    }
+
+    /**
+     * Attempts to convert a value stored as a rational number to a floating point number. Integers and numeric strings will be cast as a float and returned. Strings with exactly one "/" in them will be converted from a fraction to a floating point number.
+     *
+     * @throws LogicException when an attempt to convert a non-scalar value to a decimal is made
+     */
+    public function asDecimal(): ?float
+    {
+        if ($this->isList() || $this->isMap()) {
+            throw new LogicException('Lists and maps cannot be converted to floating point numbers.');
+        }
+
+        if ($this->isInt()) {
+            return (float) $this->value;
+        }
+
+        if (empty($this->value)) {
+            return null;
+        }
+
+        // EXIF encodes floats as a rational number
+        if (1 === substr_count($this->value, '/')) {
+            [$num, $den] = explode('/', $this->value, 2);
+
+            if (!(float) $den) {
+                return null;
+            }
+
+            return (float) $num / (float) $den;
+        }
+
+        return is_numeric($this->value) ? (float) $this->value : null;
     }
 
     /**

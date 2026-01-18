@@ -7,9 +7,9 @@ $file = '/Users/vic/Downloads/IMG_3470.jpeg';
 
 $tags = new OneToMany\ExifTools\Reader\ExifTagReader()->read($file);
 
-// print_r($tags->get('COMPUTED')->get()->getIterator()->getArrayCopy());
-
 print_r($tags->gps());
+print_r($tags->get('GPSLatitudeRef'));
+print_r($tags->get('GPSLongitudeRef'));
 // print_r($tags->toArray());
 
 // $tags->getGps()->latitude;
