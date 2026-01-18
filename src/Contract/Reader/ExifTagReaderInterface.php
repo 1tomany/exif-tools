@@ -2,12 +2,12 @@
 
 namespace OneToMany\ExifTools\Contract\Reader;
 
-use OneToMany\ExifTools\Contract\Record\ExifListInterface;
+use OneToMany\ExifTools\Contract\Record\ExifMapInterface;
 
 interface ExifTagReaderInterface
 {
     /**
      * @param non-empty-string $path
      */
-    public function read(string $path): ExifListInterface;
+    public function read(string $path): ExifMapInterface;
 }
