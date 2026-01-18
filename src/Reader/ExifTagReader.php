@@ -5,6 +5,7 @@ namespace OneToMany\ExifTools\Reader;
 use OneToMany\ExifTools\Contract\Reader\ExifTagReaderInterface;
 use OneToMany\ExifTools\Contract\Record\ExifMapInterface;
 use OneToMany\ExifTools\Exception\InvalidArgumentException;
+use OneToMany\ExifTools\Record\ExifMap;
 
 use function exif_imagetype;
 use function exif_read_data;
@@ -40,6 +41,6 @@ class ExifTagReader implements ExifTagReaderInterface
             throw new InvalidArgumentException(sprintf('Reading the EXIF data from the file "%s" failed.', $path));
         }
 
-        throw new \RuntimeException('Not implemented!');
+        return ExifMap::create($exifTags);
     }
 }
