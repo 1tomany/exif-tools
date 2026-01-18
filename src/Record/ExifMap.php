@@ -52,7 +52,14 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate
 
     public function gps(): GpsValue
     {
-        return GpsValue::create($this->get('GPSLatitude'), $this->get('GPSLatitudeRef'), $this->get('GPSLongitude'), $this->get('GPSLongitudeRef'));
+        return GpsValue::create(
+            $this->get('GPSLatitude'),
+            $this->get('GPSLatitudeRef'),
+            $this->get('GPSLongitude'),
+            $this->get('GPSLongitudeRef'),
+            $this->get('GPSAltitude'),
+            $this->get('GPSAltitudeRef'),
+        );
     }
 
     /**

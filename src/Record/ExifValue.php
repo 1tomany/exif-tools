@@ -80,6 +80,7 @@ final readonly class ExifValue
 
     /**
      * @phpstan-assert-if-true int $this->get()
+     * @phpstan-assert-if-true int $this->value()
      * @phpstan-assert-if-true int $this->value
      */
     public function isInt(): bool
@@ -89,6 +90,7 @@ final readonly class ExifValue
 
     /**
      * @phpstan-assert-if-true string $this->get()
+     * @phpstan-assert-if-true string $this->value()
      * @phpstan-assert-if-true string $this->value
      */
     public function isString(): bool
