@@ -9,6 +9,7 @@ $tags = new OneToMany\ExifTools\Reader\ExifTagReader()->read($file);
 
 // print_r($tags->get('COMPUTED')->get()->getIterator()->getArrayCopy());
 
-print_r($tags->toArray());
+print_r($tags->gps());
+// print_r($tags->toArray());
 
 // $tags->getGps()->latitude;

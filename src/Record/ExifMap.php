@@ -37,6 +37,9 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate
         return $this->values;
     }
 
+    /**
+     * @phpstan-assert-if-true ExifValue $this->get()
+     */
     public function has(string $tag): bool
     {
         return array_key_exists($tag, $this->values);
@@ -49,6 +52,7 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate
 
     public function gps(): GpsValue
     {
+        return GpsValue::create($this->get('GPSLatitude'), $this->get('GPSLatitudeRef'), $this->get('GPSLongitude'), $this->get('GPSLongitudeRef'));
     }
 
     /**

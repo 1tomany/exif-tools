@@ -52,6 +52,7 @@ final readonly class ExifValue
             return null;
         }
 
+        // EXIF encodes floats as a rational number
         if (1 === substr_count($this->value, '/')) {
             [$num, $den] = explode('/', $this->value, 2);
 

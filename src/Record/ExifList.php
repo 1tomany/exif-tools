@@ -34,6 +34,9 @@ final readonly class ExifList implements \Countable, \IteratorAggregate
         return $this->values;
     }
 
+    /**
+     * @phpstan-assert-if-true ExifValue $this->get()
+     */
     public function has(int $index): bool
     {
         return isset($this->values[$index]);
