@@ -67,6 +67,6 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate
      */
     public function toArray(): array
     {
-        return array_combine(array_keys($this->values), array_map(fn ($v) => $v->toPrimitive(), $this->values));
+        return array_combine(array_keys($this->values), array_map(fn ($v) => $v->get(), $this->values));
     }
 }

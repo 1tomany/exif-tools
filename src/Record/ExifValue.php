@@ -24,7 +24,7 @@ final readonly class ExifValue
         $this->value = $this->clean($value);
     }
 
-    public function getValue(): int|string|ExifList|ExifMap
+    public function get(): int|string|ExifList|ExifMap
     {
         return $this->value;
     }
