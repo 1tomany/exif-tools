@@ -28,13 +28,26 @@ final readonly class ExifValue
         $this->value = $this->clean($value);
     }
 
-    public function value(): int|string|ExifList|ExifMap
+    public function get(): int|string|ExifList|ExifMap
     {
         return $this->value;
     }
 
     /**
-     * @phpstan-assert-if-true int $this->value()
+     * @return int|string|ExifValueList|ExifValueMap
+     */
+    public function value(): int|string|array
+    {
+        if ($this->isList() || $this->isMap()) {
+            return $this->value->toArray();
+        }
+
+        return $this->value;
+    }
+
+    /**
+     * @phpstan-assert-if-true int $this->get()
+     * @phpstan-assert-if-true int $this->value
      */
     public function isInt(): bool
     {
@@ -42,7 +55,8 @@ final readonly class ExifValue
     }
 
     /**
-     * @phpstan-assert-if-true string $this->value()
+     * @phpstan-assert-if-true string $this->get()
+     * @phpstan-assert-if-true string $this->value
      */
     public function isString(): bool
     {
@@ -50,7 +64,8 @@ final readonly class ExifValue
     }
 
     /**
-     * @phpstan-assert-if-true ExifList $this->value()
+     * @phpstan-assert-if-true ExifList $this->get()
+     * @phpstan-assert-if-true ExifList $this->value
      */
     public function isList(): bool
     {
@@ -58,7 +73,8 @@ final readonly class ExifValue
     }
 
     /**
-     * @phpstan-assert-if-true ExifMap $this->value()
+     * @phpstan-assert-if-true ExifMap $this->get()
+     * @phpstan-assert-if-true ExifMap $this->value
      */
     public function isMap(): bool
     {

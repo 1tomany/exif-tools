@@ -7,6 +7,7 @@ use function count;
 
 /**
  * @phpstan-import-type ExifValueList from ExifValue
+ * @phpstan-import-type ExifValueMap from ExifValue
  *
  * @implements \IteratorAggregate<int, ExifValue>
  */
@@ -62,7 +63,7 @@ final readonly class ExifList implements \Countable, \IteratorAggregate
     }
 
     /**
-     * @return list<int|string|ExifList|ExifMap>
+     * @return list<int|string|ExifValueList|ExifValueMap>
      */
     public function toArray(): array
     {
