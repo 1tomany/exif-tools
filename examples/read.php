@@ -7,4 +7,6 @@ $file = '/Users/vic/Downloads/ao-smith-label.jpg';
 
 $tags = new OneToMany\ExifTools\Reader\ExifTagReader()->read($file);
 
+// print_r($tags->get('COMPUTED')->get()->getIterator()->getArrayCopy());
+
 print_r($tags->toArray());
