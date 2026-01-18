@@ -63,10 +63,10 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate
     }
 
     /**
-     * @return array<non-empty-string, int|string|list<int|string>|array<non-empty-string, int|string>>
+     * @return array<non-empty-string, int|string|ExifList|ExifMap>
      */
     public function toArray(): array
     {
-        return array_combine(array_keys($this->values), array_map(fn ($v) => $v->get(), $this->values));
+        return array_combine(array_keys($this->values), array_map(fn ($v) => $v->value(), $this->values));
     }
 }

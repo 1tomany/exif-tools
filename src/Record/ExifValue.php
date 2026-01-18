@@ -24,13 +24,13 @@ final readonly class ExifValue
         $this->value = $this->clean($value);
     }
 
-    public function get(): int|string|ExifList|ExifMap
+    public function value(): int|string|ExifList|ExifMap
     {
         return $this->value;
     }
 
     /**
-     * @phpstan-assert-if-true int $this->getValue()
+     * @phpstan-assert-if-true int $this->value()
      */
     public function isInt(): bool
     {
@@ -38,7 +38,7 @@ final readonly class ExifValue
     }
 
     /**
-     * @phpstan-assert-if-true string $this->getValue()
+     * @phpstan-assert-if-true string $this->value()
      */
     public function isString(): bool
     {
@@ -46,32 +46,19 @@ final readonly class ExifValue
     }
 
     /**
-     * @phpstan-assert-if-true ExifList $this->getValue()
+     * @phpstan-assert-if-true ExifList $this->value()
      */
     public function isList(): bool
     {
         return $this->value instanceof ExifList;
     }
 
+    /**
+     * @phpstan-assert-if-true ExifMap $this->value()
+     */
     public function isMap(): bool
     {
         return $this->value instanceof ExifMap;
-    }
-
-    /**
-     * @return int|string|list<int|string>|array<non-empty-string, int|string>
-     */
-    public function toPrimitive(): int|string|array
-    {
-        if ($this->value instanceof ExifMap) {
-            return $this->value->toArray();
-        }
-
-        if ($this->value instanceof ExifList) {
-            return $this->value->toArray();
-        }
-
-        return $this->value;
     }
 
     /**
