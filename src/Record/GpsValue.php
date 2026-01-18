@@ -4,6 +4,10 @@ namespace OneToMany\ExifTools\Record;
 
 use OneToMany\ExifTools\Exception\InvalidArgumentException;
 
+use function in_array;
+use function strtoupper;
+use function trim;
+
 final readonly class GpsValue
 {
     public function __construct(
@@ -54,8 +58,9 @@ final readonly class GpsValue
         if ($gpsAltitude && $gpsAltitude->isString()) {
             $altitudeMeters = $gpsAltitude->asDecimal();
 
+            // Photo was taken below sea level
             if (1 === $gpsAltitudeRef?->get()) {
-                $altitudeMeters = -1 * $altitudeMeters; // Below sea level
+                $altitudeMeters = -1 * $altitudeMeters;
             }
         }
 
@@ -70,12 +75,16 @@ final readonly class GpsValue
             return null;
         }
 
-        $dms = $deg->asDecimal() + ($min->asDecimal() / 60) + ((float) $list->get(2)?->asDecimal() / 3600);
-
-        if (\in_array($ref, ['W', 'S'])) {
-            $dms = -1.0 * $dms;
+        if (!$ref = trim($ref)) {
+            return null;
         }
 
-        return $dms;
+        $degMinSec = $deg->asDecimal() + ($min->asDecimal() / 60) + ((float) $list->get(2)?->asDecimal() / 3600);
+
+        if (in_array(strtoupper($ref), ['W', 'S'])) {
+            $degMinSec = -1.0 * $degMinSec;
+        }
+
+        return $degMinSec;
     }
 }
