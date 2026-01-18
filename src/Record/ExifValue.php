@@ -58,6 +58,9 @@ final readonly class ExifValue
         return $this->value instanceof ExifMap;
     }
 
+    /**
+     * @return int|string|list<int|string>|array<non-empty-string, int|string>
+     */
     public function toPrimitive(): int|string|array
     {
         if ($this->value instanceof ExifMap) {
