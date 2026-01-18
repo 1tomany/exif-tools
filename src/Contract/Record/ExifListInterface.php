@@ -9,13 +9,7 @@ interface ExifListInterface
      */
     public function all(): array;
 
-    /**
-     * @param non-empty-string $tag
-     */
-    public function has(string $tag): bool;
+    public function has(int $index): bool;
 
-    /**
-     * @param non-empty-string $tag
-     */
-    public function get(string $tag): ?ExifValueInterface;
+    public function get(int $index): ?ExifValueInterface;
 }

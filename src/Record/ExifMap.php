@@ -5,6 +5,7 @@ namespace OneToMany\ExifTools\Record;
 use OneToMany\ExifTools\Contract\Record\ExifMapInterface;
 use OneToMany\ExifTools\Contract\Record\ExifValueInterface;
 
+use function array_key_exists;
 use function count;
 
 /**
@@ -20,7 +21,7 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate, ExifMapI
     }
 
     /**
-     * @param array<non-empty-string, int|string> $values
+     * @param array<non-empty-string, int|string|list<int|string>|array<non-empty-string, int|string>> $values
      */
     public static function create(array $values): self
     {
@@ -40,12 +41,12 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate, ExifMapI
 
     public function has(string $tag): bool
     {
-        throw new \Exception('Not implemented');
+        return array_key_exists($tag, $this->values);
     }
 
     public function get(string $tag): ?ExifValueInterface
     {
-        throw new \Exception('Not implemented');
+        return $this->values[$tag] ?? null;
     }
 
     /**

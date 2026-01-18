@@ -33,14 +33,14 @@ final readonly class ExifList implements \Countable, \IteratorAggregate, ExifLis
         return $this->values;
     }
 
-    public function has(string $tag): bool
+    public function has(int $index): bool
     {
-        throw new \Exception('Not implemented');
+        return isset($this->values[$index]);
     }
 
-    public function get(string $tag): ?ExifValueInterface
+    public function get(int $index): ?ExifValueInterface
     {
-        throw new \Exception('Not implemented');
+        return $this->values[$index] ?? null;
     }
 
     /**

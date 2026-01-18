@@ -6,6 +6,7 @@ use OneToMany\ExifTools\Contract\Record\ExifListInterface;
 use OneToMany\ExifTools\Contract\Record\ExifMapInterface;
 use OneToMany\ExifTools\Contract\Record\ExifValueInterface;
 
+use function array_is_list;
 use function count;
 use function ctype_digit;
 use function is_int;
@@ -18,7 +19,10 @@ final readonly class ExifValue implements ExifValueInterface
 {
     public int|string|ExifListInterface|ExifMapInterface $value;
 
-    public function __construct(int|string|ExifListInterface|ExifMapInterface $value)
+    /**
+     * @param int|string|list<int|string>|array<non-empty-string, int|string> $value
+     */
+    public function __construct(int|string|array $value)
     {
         $this->value = $this->clean($value);
     }
@@ -48,8 +52,15 @@ final readonly class ExifValue implements ExifValueInterface
         return $this->value instanceof ExifMapInterface;
     }
 
-    private function clean(int|string|ExifListInterface|ExifMapInterface $value): int|string|ExifListInterface|ExifMapInterface
+    /**
+     * @param int|string|list<int|string>|array<non-empty-string, int|string> $value
+     */
+    private function clean(int|string|array $value): int|string|ExifListInterface|ExifMapInterface
     {
+        if (is_int($value)) {
+            return $value;
+        }
+
         if (is_string($value)) {
             // Convert integer strings
             if (ctype_digit($value)) {
@@ -74,6 +85,10 @@ final readonly class ExifValue implements ExifValueInterface
             return trim($value);
         }
 
-        return $value;
+        if (array_is_list($value)) {
+            return ExifList::create($value);
+        }
+
+        return ExifMap::create($value);
     }
 }
