@@ -89,9 +89,11 @@ final readonly class ExifValue
     }
 
     /**
-     * Attempts to convert a value stored as a rational number to a floating point number. Integers and numeric strings will be cast as a float and returned. Strings with exactly one "/" in them will be converted from a fraction to a floating point number.
+     * This attempts to convert integers, numeric strings, and fractional strings to
+     * a floating point number. EXIF encodes decimals as a fraction (ex: "3930/100"),
+     * so the fractional components are extracted, divded, and returned as a float.
      *
-     * @throws LogicException when an attempt to convert a non-scalar value to a decimal is made
+     * @throws LogicException if the value is not an integer or string
      */
     public function asDecimal(): ?float
     {
