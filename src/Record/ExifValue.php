@@ -12,12 +12,15 @@ use function str_contains;
 use function strlen;
 use function trim;
 
+/**
+ * @phpstan-type ExifValueMap array<non-empty-string, int|string>
+ */
 final readonly class ExifValue
 {
     private int|string|ExifList|ExifMap $value;
 
     /**
-     * @param int|string|list<int|string>|array<non-empty-string, int|string> $value
+     * @param int|string|list<int|string>|ExifValueMap $value
      */
     public function __construct(int|string|array $value)
     {
@@ -62,7 +65,7 @@ final readonly class ExifValue
     }
 
     /**
-     * @param int|string|list<int|string>|array<non-empty-string, int|string> $value
+     * @param int|string|list<int|string>|ExifValueMap $value
      */
     private function clean(int|string|array $value): int|string|ExifList|ExifMap
     {
@@ -76,7 +79,7 @@ final readonly class ExifValue
                 return (int) $value;
             }
 
-            // Attempt to conver NUL bytes
+            // Attempt to convert NUL bytes
             if (str_contains($value, "\x00")) {
                 $nulByteList = [];
 
