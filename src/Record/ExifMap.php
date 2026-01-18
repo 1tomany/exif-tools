@@ -47,6 +47,10 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate
         return $this->values[$tag] ?? null;
     }
 
+    public function gps(): GpsValue
+    {
+    }
+
     /**
      * @see \Countable
      */

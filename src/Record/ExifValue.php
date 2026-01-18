@@ -2,14 +2,19 @@
 
 namespace OneToMany\ExifTools\Record;
 
+use OneToMany\ExifTools\Exception\LogicException;
+
 use function array_is_list;
 use function count;
 use function ctype_digit;
+use function explode;
 use function is_int;
+use function is_numeric;
 use function is_string;
 use function ord;
 use function str_contains;
 use function strlen;
+use function substr_count;
 use function trim;
 
 /**
@@ -31,6 +36,33 @@ final readonly class ExifValue
     public function get(): int|string|ExifList|ExifMap
     {
         return $this->value;
+    }
+
+    public function asDecimal(): ?float
+    {
+        if ($this->isList() || $this->isMap()) {
+            throw new LogicException('Lists and maps cannot be converted to decimals.');
+        }
+
+        if ($this->isInt()) {
+            return (float) $this->value;
+        }
+
+        if (empty($this->value)) {
+            return null;
+        }
+
+        if (1 === substr_count($this->value, '/')) {
+            [$num, $den] = explode('/', $this->value, 2);
+
+            if (!(float) $den) {
+                return null;
+            }
+
+            return (float) $num / (float) $den;
+        }
+
+        return is_numeric($this->value) ? (float) $this->value : null;
     }
 
     /**
