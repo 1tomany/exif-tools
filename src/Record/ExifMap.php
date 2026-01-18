@@ -8,7 +8,10 @@ use function array_keys;
 use function array_map;
 use function count;
 
-final readonly class ExifMap implements \Countable
+/**
+ * @implements \IteratorAggregate<non-empty-string, ExifValue>
+ */
+final readonly class ExifMap implements \Countable, \IteratorAggregate
 {
     /**
      * @var array<non-empty-string, ExifValue>
@@ -39,6 +42,14 @@ final readonly class ExifMap implements \Countable
     public function get(string $tag): ?ExifValue
     {
         return $this->values[$tag] ?? null;
+    }
+
+    /**
+     * @return \ArrayIterator<string, ExifValue>
+     */
+    public function getIterator(): \ArrayIterator
+    {
+        return new \ArrayIterator($this->values);
     }
 
     public function count(): int
