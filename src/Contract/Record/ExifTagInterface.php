@@ -3,7 +3,7 @@
 namespace OneToMany\ExifTools\Contract\Record;
 
 /**
- * @phpstan-type ExifTagValue bool|int|float|string|list<int|string>|array<non-empty-string, int|string>|null
+ * @phpstan-type ExifTagValue scalar|list<scalar|null>|array<non-empty-string, scalar|null>|null
  */
 interface ExifTagInterface
 {

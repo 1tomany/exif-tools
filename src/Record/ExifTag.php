@@ -6,7 +6,11 @@ use OneToMany\ExifTools\Contract\Record\ExifTagInterface;
 use OneToMany\ExifTools\Exception\InvalidArgumentException;
 
 use function ctype_digit;
+use function is_array;
+use function is_bool;
+use function is_float;
 use function is_int;
+use function is_null;
 use function is_string;
 use function ord;
 use function strlen;
@@ -59,7 +63,7 @@ final readonly class ExifTag implements ExifTagInterface
     /**
      * @see OneToMany\ExifTools\Contract\Record\ExifTagInterface
      */
-    public function getValue(): int|float|string|array|null
+    public function getValue(): bool|int|float|string|array|null
     {
         return $this->value;
     }
@@ -67,9 +71,14 @@ final readonly class ExifTag implements ExifTagInterface
     /**
      * @return ExifTagValue
      */
-    private function cleanValue(mixed $value): int|float|string|array|null
+    private function cleanValue(mixed $value): bool|int|float|string|array|null
     {
-        if (is_int($value)) {
+        if (
+            is_bool($value)
+            || is_int($value)
+            || is_float($value)
+            || is_null($value)
+        ) {
             return $value;
         }
 
@@ -99,10 +108,18 @@ final readonly class ExifTag implements ExifTagInterface
             return trim($value);
         }
 
-        foreach ($value as $k => $v) {
-            $value[$k] = $this->cleanValue($v);
+        if (is_array($value)) {
+            $clean = [];
+
+            foreach ($value as $k => $v) {
+                $clean[] = $this->cleanValue($v);
+            }
+
+            \PHPStan\dumpType($clean);
+
+            return $value;
         }
 
-        return $value;
+        return null;
     }
 }
