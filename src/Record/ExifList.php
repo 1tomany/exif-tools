@@ -5,7 +5,10 @@ namespace OneToMany\ExifTools\Record;
 use function array_map;
 use function count;
 
-final readonly class ExifList implements \Countable
+/**
+ * @implements \IteratorAggregate<int, ExifValue>
+ */
+final readonly class ExifList implements \Countable, \IteratorAggregate
 {
     /**
      * @var list<ExifValue>
@@ -38,8 +41,21 @@ final readonly class ExifList implements \Countable
         return $this->values[$index] ?? null;
     }
 
+    /**
+     * @see \Countable
+     */
     public function count(): int
     {
         return count($this->values);
+    }
+
+    /**
+     * @see \IteratorAggregate
+     *
+     * @return \ArrayIterator<int, ExifValue>
+     */
+    public function getIterator(): \ArrayIterator
+    {
+        return new \ArrayIterator($this->values);
     }
 }

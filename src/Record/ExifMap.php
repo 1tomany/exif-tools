@@ -45,15 +45,20 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate
     }
 
     /**
+     * @see \Countable
+     */
+    public function count(): int
+    {
+        return count($this->values);
+    }
+
+    /**
+     * @see \IteratorAggregate
+     *
      * @return \ArrayIterator<string, ExifValue>
      */
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->values);
-    }
-
-    public function count(): int
-    {
-        return count($this->values);
     }
 }
