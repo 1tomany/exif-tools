@@ -13,7 +13,7 @@ final readonly class ExifList implements \Countable, \IteratorAggregate
     /**
      * @var list<ExifValue>
      */
-    public array $values;
+    private array $values;
 
     /**
      * @param list<int|string> $values

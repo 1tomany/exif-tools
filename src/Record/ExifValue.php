@@ -14,7 +14,7 @@ use function trim;
 
 final readonly class ExifValue
 {
-    public int|string|ExifList|ExifMap $value;
+    private int|string|ExifList|ExifMap $value;
 
     /**
      * @param int|string|list<int|string>|array<non-empty-string, int|string> $value

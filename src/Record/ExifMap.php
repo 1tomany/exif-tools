@@ -16,7 +16,7 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate
     /**
      * @var array<non-empty-string, ExifValue>
      */
-    public array $values;
+    private array $values;
 
     /**
      * @param array<non-empty-string, int|string|list<int|string>|array<non-empty-string, int|string>> $values
