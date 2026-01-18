@@ -6,11 +6,13 @@ use OneToMany\ExifTools\Contract\Record\ExifListInterface;
 use OneToMany\ExifTools\Contract\Record\ExifMapInterface;
 use OneToMany\ExifTools\Contract\Record\ExifValueInterface;
 
+use function count;
 use function ctype_digit;
 use function is_int;
 use function is_string;
 use function str_contains;
 use function strlen;
+use function trim;
 
 final readonly class ExifValue implements ExifValueInterface
 {
@@ -56,20 +58,20 @@ final readonly class ExifValue implements ExifValueInterface
 
             // Convert NUL bytes to a scalar or list
             if (str_contains($value, "\x00")) {
-                if (1 === strlen($value)) {
-                    return ord($value[0]);
-                }
-
-                $byteList = [];
+                $nulByteList = [];
 
                 for ($i = 0; $i < strlen($value); ++$i) {
-                    $byteList[] = ord($value[$i]);
+                    $nulByteList[] = ord($value[$i]);
                 }
 
-                return ExifList::create($byteList);
+                if (1 === count($nulByteList)) {
+                    return $nulByteList[0];
+                }
+
+                return ExifList::create($nulByteList);
             }
 
-            return \trim($value);
+            return trim($value);
         }
 
         return $value;
