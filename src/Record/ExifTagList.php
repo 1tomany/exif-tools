@@ -20,7 +20,7 @@ class ExifTagList implements ExifTagListInterface, \Countable, \IteratorAggregat
     private array $tags = [];
 
     /**
-     * @param array<non-empty-string, int|string> $tags
+     * @param array<non-empty-string, int|string|list<int|string>|array<non-empty-string, int|string>> $tags
      */
     public function __construct(array $tags)
     {

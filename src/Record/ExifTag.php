@@ -67,7 +67,7 @@ final readonly class ExifTag implements ExifTagInterface
     /**
      * @see OneToMany\ExifTools\Contract\Record\ExifTagInterface
      */
-    public function getValue(): int|string|array
+    public function getValue(): int|string|array|ExifTagListInterface
     {
         return $this->value;
     }
