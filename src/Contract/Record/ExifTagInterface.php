@@ -2,6 +2,9 @@
 
 namespace OneToMany\ExifTools\Contract\Record;
 
+/**
+ * @phpstan-type ExifTagValue int|string|list<int|string>|array<non-empty-string, int|string>
+ */
 interface ExifTagInterface
 {
     /**
@@ -15,7 +18,7 @@ interface ExifTagInterface
     public function isTag(string $tag): bool;
 
     /**
-     * @return int|string|array<non-negative-int|non-empty-string, int|string>
+     * @return ExifTagValue
      */
     public function getValue(): int|string|array;
 }
