@@ -2,10 +2,10 @@
 
 namespace OneToMany\ExifTools\Contract\Record;
 
-interface ExifTagMapInterface
+interface ExifMapInterface
 {
     /**
-     * @return array<non-empty-string, ExifTagInterface>
+     * @return array<non-empty-string, ExifValueInterface>
      */
     public function all(): array;
 
@@ -17,5 +17,5 @@ interface ExifTagMapInterface
     /**
      * @param non-empty-string $tag
      */
-    public function get(string $tag): ?ExifTagInterface;
+    public function get(string $tag): ?ExifValueInterface;
 }

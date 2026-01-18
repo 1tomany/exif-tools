@@ -3,9 +3,8 @@
 namespace OneToMany\ExifTools\Reader;
 
 use OneToMany\ExifTools\Contract\Reader\ExifTagReaderInterface;
-use OneToMany\ExifTools\Contract\Record\ExifTagListInterface;
+use OneToMany\ExifTools\Contract\Record\ExifListInterface;
 use OneToMany\ExifTools\Exception\InvalidArgumentException;
-use OneToMany\ExifTools\Record\ExifTagList;
 
 use function exif_imagetype;
 use function exif_read_data;
@@ -22,7 +21,7 @@ class ExifTagReader implements ExifTagReaderInterface
     /**
      * @see OneToMany\ExifTools\Contract\Reader\ExifTagReaderInterface
      */
-    public function read(string $path): ExifTagListInterface
+    public function read(string $path): ExifListInterface
     {
         if (!is_file($path) || !is_readable($path)) {
             throw new InvalidArgumentException(sprintf('The file "%s" is not readable.', $path));
@@ -41,6 +40,6 @@ class ExifTagReader implements ExifTagReaderInterface
             throw new InvalidArgumentException(sprintf('Reading the EXIF data from the file "%s" failed.', $path));
         }
 
-        return new ExifTagList($exifTags);
+        throw new \RuntimeException('Not implemented!');
     }
 }
