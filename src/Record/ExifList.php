@@ -2,16 +2,13 @@
 
 namespace OneToMany\ExifTools\Record;
 
-use OneToMany\ExifTools\Contract\Record\ExifListInterface;
-use OneToMany\ExifTools\Contract\Record\ExifValueInterface;
-
 use function array_map;
 use function count;
 
-final readonly class ExifList implements \Countable, ExifListInterface
+final readonly class ExifList implements \Countable
 {
     /**
-     * @var list<ExifValueInterface>
+     * @var list<ExifValue>
      */
     public array $values;
 
@@ -23,6 +20,9 @@ final readonly class ExifList implements \Countable, ExifListInterface
         $this->values = array_map(fn ($v) => new ExifValue($v), $values);
     }
 
+    /**
+     * @return list<ExifValue>
+     */
     public function all(): array
     {
         return $this->values;
@@ -33,7 +33,7 @@ final readonly class ExifList implements \Countable, ExifListInterface
         return isset($this->values[$index]);
     }
 
-    public function get(int $index): ?ExifValueInterface
+    public function get(int $index): ?ExifValue
     {
         return $this->values[$index] ?? null;
     }

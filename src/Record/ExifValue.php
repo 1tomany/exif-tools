@@ -2,10 +2,6 @@
 
 namespace OneToMany\ExifTools\Record;
 
-use OneToMany\ExifTools\Contract\Record\ExifListInterface;
-use OneToMany\ExifTools\Contract\Record\ExifMapInterface;
-use OneToMany\ExifTools\Contract\Record\ExifValueInterface;
-
 use function array_is_list;
 use function count;
 use function ctype_digit;
@@ -16,9 +12,9 @@ use function str_contains;
 use function strlen;
 use function trim;
 
-final readonly class ExifValue implements ExifValueInterface
+final readonly class ExifValue
 {
-    public int|string|ExifListInterface|ExifMapInterface $value;
+    public int|string|ExifList|ExifMap $value;
 
     /**
      * @param int|string|list<int|string>|array<non-empty-string, int|string> $value
@@ -28,35 +24,44 @@ final readonly class ExifValue implements ExifValueInterface
         $this->value = $this->clean($value);
     }
 
-    public function getValue(): int|string|ExifListInterface|ExifMapInterface
+    public function getValue(): int|string|ExifList|ExifMap
     {
         return $this->value;
     }
 
+    /**
+     * @phpstan-assert-if-true int $this->getValue()
+     */
     public function isInt(): bool
     {
         return is_int($this->value);
     }
 
+    /**
+     * @phpstan-assert-if-true string $this->getValue()
+     */
     public function isString(): bool
     {
         return is_string($this->value);
     }
 
+    /**
+     * @phpstan-assert-if-true ExifList $this->getValue()
+     */
     public function isList(): bool
     {
-        return $this->value instanceof ExifListInterface;
+        return $this->value instanceof ExifList;
     }
 
     public function isMap(): bool
     {
-        return $this->value instanceof ExifMapInterface;
+        return $this->value instanceof ExifMap;
     }
 
     /**
      * @param int|string|list<int|string>|array<non-empty-string, int|string> $value
      */
-    private function clean(int|string|array $value): int|string|ExifListInterface|ExifMapInterface
+    private function clean(int|string|array $value): int|string|ExifList|ExifMap
     {
         if (is_int($value)) {
             return $value;

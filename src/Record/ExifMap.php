@@ -2,19 +2,16 @@
 
 namespace OneToMany\ExifTools\Record;
 
-use OneToMany\ExifTools\Contract\Record\ExifMapInterface;
-use OneToMany\ExifTools\Contract\Record\ExifValueInterface;
-
 use function array_combine;
 use function array_key_exists;
 use function array_keys;
 use function array_map;
 use function count;
 
-final readonly class ExifMap implements \Countable, ExifMapInterface
+final readonly class ExifMap implements \Countable
 {
     /**
-     * @var array<non-empty-string, ExifValueInterface>
+     * @var array<non-empty-string, ExifValue>
      */
     public array $values;
 
@@ -26,6 +23,9 @@ final readonly class ExifMap implements \Countable, ExifMapInterface
         $this->values = array_combine(array_keys($values), array_map(fn ($v) => new ExifValue($v), $values));
     }
 
+    /**
+     * @return array<non-empty-string, ExifValue>
+     */
     public function all(): array
     {
         return $this->values;
@@ -36,7 +36,7 @@ final readonly class ExifMap implements \Countable, ExifMapInterface
         return array_key_exists($tag, $this->values);
     }
 
-    public function get(string $tag): ?ExifValueInterface
+    public function get(string $tag): ?ExifValue
     {
         return $this->values[$tag] ?? null;
     }

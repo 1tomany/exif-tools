@@ -3,7 +3,6 @@
 namespace OneToMany\ExifTools\Reader;
 
 use OneToMany\ExifTools\Contract\Reader\ExifTagReaderInterface;
-use OneToMany\ExifTools\Contract\Record\ExifMapInterface;
 use OneToMany\ExifTools\Exception\InvalidArgumentException;
 use OneToMany\ExifTools\Record\ExifMap;
 
@@ -22,7 +21,7 @@ class ExifTagReader implements ExifTagReaderInterface
     /**
      * @see OneToMany\ExifTools\Contract\Reader\ExifTagReaderInterface
      */
-    public function read(string $path): ExifMapInterface
+    public function read(string $path): ExifMap
     {
         if (!is_file($path) || !is_readable($path)) {
             throw new InvalidArgumentException(sprintf('The file "%s" is not readable.', $path));
