@@ -8,10 +8,7 @@ use OneToMany\ExifTools\Contract\Record\ExifValueInterface;
 use function array_key_exists;
 use function count;
 
-/**
- * @implements \IteratorAggregate<non-empty-string, ExifValueInterface>
- */
-final readonly class ExifMap implements \Countable, \IteratorAggregate, ExifMapInterface
+final readonly class ExifMap implements \Countable, ExifMapInterface
 {
     /**
      * @param array<non-empty-string, ExifValueInterface> $values
@@ -47,14 +44,6 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate, ExifMapI
     public function get(string $tag): ?ExifValueInterface
     {
         return $this->values[$tag] ?? null;
-    }
-
-    /**
-     * @return \ArrayIterator<non-empty-string, ExifValueInterface>
-     */
-    public function getIterator(): \ArrayIterator
-    {
-        return new \ArrayIterator($this->values); // @phpstan-ignore-line
     }
 
     public function count(): int

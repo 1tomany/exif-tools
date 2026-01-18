@@ -8,11 +8,7 @@ use OneToMany\ExifTools\Contract\Record\ExifValueInterface;
 use function array_map;
 use function count;
 
-/**
- * @template-covariant ExifValueInterface
- * @implements \IteratorAggregate<int, ExifValueInterface>
- */
-final readonly class ExifList implements \Countable, \IteratorAggregate, ExifListInterface
+final readonly class ExifList implements \Countable, ExifListInterface
 {
     /**
      * @var list<ExifValueInterface>
@@ -40,14 +36,6 @@ final readonly class ExifList implements \Countable, \IteratorAggregate, ExifLis
     public function get(int $index): ?ExifValueInterface
     {
         return $this->values[$index] ?? null;
-    }
-
-    /**
-     * @return \ArrayIterator<int, ExifValueInterface>
-     */
-    public function getIterator(): \ArrayIterator
-    {
-        return new \ArrayIterator($this->values);
     }
 
     public function count(): int
