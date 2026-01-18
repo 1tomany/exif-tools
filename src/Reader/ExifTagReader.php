@@ -33,6 +33,9 @@ class ExifTagReader implements ExifTagReaderInterface
             throw new InvalidArgumentException(sprintf('The file "%s" is not a valid image.', $path));
         }
 
+        /**
+         * @var false|array<non-empty-string, int|string|array<non-negative-int|non-empty-string, int|string>> $exifTags
+         */
         $exifTags = @exif_read_data($path, null, false, false);
 
         if (false === $exifTags) {
