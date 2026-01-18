@@ -14,7 +14,6 @@ final readonly class GpsValue
         public ?float $latitude = null,
         public ?float $longitude = null,
         public ?float $altitude = null,
-        // public ?float $direction = null,
     ) {
     }
 
@@ -25,46 +24,43 @@ final readonly class GpsValue
         ?ExifValue $gpsLongitudeRef,
         ?ExifValue $gpsAltitude = null,
         ?ExifValue $gpsAltitudeRef = null,
-        // ?string $speed = null,
-        // ?string $speedRef = null,
-        // ?string $direction = null,
     ): self {
-        $latitudeDMS = $longitudeDMS = $altitudeMeters = null;
+        $latitude = $longitude = $altitude = null;
 
         if ($gpsLatitude && $gpsLatitudeRef) {
             if (!$gpsLatitude->isList()) {
-                throw new InvalidArgumentException('Latitude must be a list.');
+                throw new InvalidArgumentException('GPSLatitude must be a list.');
             }
 
             if (!$gpsLatitudeRef->isString()) {
-                throw new InvalidArgumentException('LatitudeRef must be a string.');
+                throw new InvalidArgumentException('GPSLatitudeRef must be a string.');
             }
 
-            $latitudeDMS = self::toDMS($gpsLatitude->get(), $gpsLatitudeRef->get());
+            $latitude = self::toDMS($gpsLatitude->get(), $gpsLatitudeRef->get());
         }
 
         if ($gpsLongitude && $gpsLongitudeRef) {
             if (!$gpsLongitude->isList()) {
-                throw new InvalidArgumentException('Longitude must be a list.');
+                throw new InvalidArgumentException('GPSLongitude must be a list.');
             }
 
             if (!$gpsLongitudeRef->isString()) {
-                throw new InvalidArgumentException('LongitudeRef must be a string.');
+                throw new InvalidArgumentException('GPSLongitudeRef must be a string.');
             }
 
-            $longitudeDMS = self::toDMS($gpsLongitude->get(), $gpsLongitudeRef->get());
+            $longitude = self::toDMS($gpsLongitude->get(), $gpsLongitudeRef->get());
         }
 
         if ($gpsAltitude && $gpsAltitude->isString()) {
-            $altitudeMeters = $gpsAltitude->asDecimal();
+            $altitude = $gpsAltitude->asDecimal();
 
             // Photo was taken below sea level
             if (1 === $gpsAltitudeRef?->get()) {
-                $altitudeMeters = -1 * $altitudeMeters;
+                $altitude = -1 * $altitude;
             }
         }
 
-        return new self($latitudeDMS, $longitudeDMS, $altitudeMeters);
+        return new self($latitude, $longitude, $altitude);
     }
 
     private static function toDMS(ExifList $list, string $ref): ?float
