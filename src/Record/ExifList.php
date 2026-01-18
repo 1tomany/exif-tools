@@ -18,14 +18,6 @@ final readonly class ExifList implements \Countable, \IteratorAggregate, ExifLis
      */
     public function __construct(public array $values)
     {
-        // $exifValues = [];
-
-        // foreach ($values as $value) {
-        //     $exifValues[] = new ExifValue($value);
-        // }
-
-        // $this->values = $exifValues;
-        // $this->values = array_map(fn ($v) => new ExifValue($v), $values);
     }
 
     /**

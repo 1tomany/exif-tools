@@ -18,30 +18,7 @@ final readonly class ExifValue implements ExifValueInterface
 
     public function __construct(int|string|ExifListInterface|ExifMapInterface $value)
     {
-        if (is_string($value)) {
-            // Convert integer strings
-            if (ctype_digit($value)) {
-                $value = (int) $value;
-            }
-
-            // Convert NUL bytes to a scalar or list
-            if (str_contains($value, "\x00")) {
-                if (1 === strlen($value)) {
-                    $value = ord($value[0]);
-                }
-
-                $byteList = [];
-
-                for ($i = 0; $i < strlen($value); ++$i) {
-                    $byteList[] = ord($value[$i]);
-                }
-
-                // $value =
-                // return $byteList;
-            }
-
-            return trim($value);
-        }
+        $this->value = $this->clean($value);
     }
 
     public function getValue(): int|string|ExifListInterface|ExifMapInterface
@@ -67,5 +44,34 @@ final readonly class ExifValue implements ExifValueInterface
     public function isMap(): bool
     {
         return $this->value instanceof ExifMapInterface;
+    }
+
+    private function clean(int|string|ExifListInterface|ExifMapInterface $value): int|string|ExifListInterface|ExifMapInterface
+    {
+        if (is_string($value)) {
+            // Convert integer strings
+            if (ctype_digit($value)) {
+                return (int) $value;
+            }
+
+            // Convert NUL bytes to a scalar or list
+            if (str_contains($value, "\x00")) {
+                if (1 === strlen($value)) {
+                    return ord($value[0]);
+                }
+
+                $byteList = [];
+
+                for ($i = 0; $i < strlen($value); ++$i) {
+                    $byteList[] = ord($value[$i]);
+                }
+
+                return ExifList::create($byteList);
+            }
+
+            return \trim($value);
+        }
+
+        return $value;
     }
 }
