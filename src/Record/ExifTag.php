@@ -8,6 +8,9 @@ use OneToMany\ExifTools\Exception\InvalidArgumentException;
 use function strtolower;
 use function trim;
 
+/**
+ * @phpstan-import-type ExifTagValue from ExifTagInterface
+ */
 final readonly class ExifTag implements ExifTagInterface
 {
     /**
@@ -16,17 +19,21 @@ final readonly class ExifTag implements ExifTagInterface
     public string $tag;
 
     /**
-     * @var int|string|array<int|string, int|string>
+     * @var ExifTagValue
      */
     public int|string|array $value;
 
-    public function __construct(string $tag, mixed $value)
+    /**
+     * @param ExifTagValue $value
+     */
+    public function __construct(string $tag, int|string|array $value)
     {
         if (empty($tag = trim($tag))) {
             throw new InvalidArgumentException('The tag cannot be empty.');
         }
 
         $this->tag = $tag;
+        $this->value = $value;
     }
 
     /**
