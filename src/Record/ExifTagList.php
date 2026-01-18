@@ -12,13 +12,21 @@ use function count;
 /**
  * @implements \IteratorAggregate<int, ExifTagInterface>
  */
-readonly class ExifTagList implements ExifTagListInterface, \Countable, \IteratorAggregate
+class ExifTagList implements ExifTagListInterface, \Countable, \IteratorAggregate
 {
     /**
-     * @param list<ExifTagInterface> $tags
+     * @var list<ExifTagInterface>
      */
-    public function __construct(protected array $tags)
+    private array $tags = [];
+
+    /**
+     * @param array<non-empty-string, int|string> $tags
+     */
+    public function __construct(array $tags)
     {
+        foreach ($tags as $tag => $value) {
+            $this->tags[] = new ExifTag($tag, $value);
+        }
     }
 
     /**

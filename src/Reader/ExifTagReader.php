@@ -38,7 +38,7 @@ class ExifTagReader implements ExifTagReaderInterface
         }
 
         /**
-         * @var false|array<non-empty-string, ExifTagValue> $exifTags
+         * @var false|array<non-empty-string, int|string|list<int|string>|array<non-empty-string, int|string>> $exifTags
          */
         $exifTags = @exif_read_data($path, null, false, false);
 
@@ -46,12 +46,12 @@ class ExifTagReader implements ExifTagReaderInterface
             throw new InvalidArgumentException(sprintf('Reading the EXIF data from the file "%s" failed.', $path));
         }
 
-        $exifTagList = [];
+        // $exifTagList = [];
 
-        foreach ($exifTags as $tag => $value) {
-            $exifTagList[] = new ExifTag($tag, $value);
-        }
+        // foreach ($exifTags as $tag => $value) {
+        //     $exifTagList[] = new ExifTag($tag, $value);
+        // }
 
-        return new ExifTagList($exifTagList);
+        return new ExifTagList($exifTags);
     }
 }
