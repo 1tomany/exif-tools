@@ -2,7 +2,7 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-// Photo with GPS coordinates
+// Photo with GPS coordinates and altitude
 $photoPath = __DIR__.'/utah-landscape.jpeg';
 $gps = new OneToMany\ExifTools\Reader\ExifTagReader()->read($photoPath)->gps();
 
@@ -12,10 +12,11 @@ printf("Longitude: %s\n", $gps->getLongitudeDecimal());
 printf("Altitude: %sm\n", $gps->getAltitudeDecimal());
 printf("%s\n", str_repeat('-', 40));
 
-// Photo with NUL bytes converted to list of integers
+// NUL bytes converted to list of integers
 $photoPath = __DIR__.'/heater-label.jpeg';
 $exifTags = new OneToMany\ExifTools\Reader\ExifTagReader()->read($photoPath);
 
+// isList() returning true ensures get() returns an ExifValue object
 assert(true === $exifTags->get('ComponentsConfiguration')?->isList());
 
 printf("Photo: %s\n", basename($photoPath));
