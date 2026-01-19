@@ -73,12 +73,12 @@ final readonly class GpsValue
 
     public function getLongitudeDecimal(int $scale = 6): ?string
     {
-        return $this->toDecimal($this->latitude, $scale);
+        return $this->toDecimal($this->longitude, $scale);
     }
 
     public function getAltitudeDecimal(int $scale = 2): ?string
     {
-        return $this->toDecimal($this->latitude, $scale);
+        return $this->toDecimal($this->altitude, $scale);
     }
 
     private function toDecimal(?float $number, int $scale): ?string

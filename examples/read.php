@@ -2,14 +2,21 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-$file = '/Users/vic/Downloads/IMG_3470.jpeg';
-// $file = '/Users/vic/Downloads/ao-smith-label.jpg';
+// Photo with GPS coordinates
+$photoPath = __DIR__.'/utah-landscape.jpeg';
+$gps = new OneToMany\ExifTools\Reader\ExifTagReader()->read($photoPath)->gps();
 
-$tags = new OneToMany\ExifTools\Reader\ExifTagReader()->read($file);
+printf("Photo: %s\n", basename($photoPath));
+printf("Latitude: %s\n", $gps->getLatitudeDecimal());
+printf("Longitude: %s\n", $gps->getLongitudeDecimal());
+printf("Altitude: %sm\n", $gps->getAltitudeDecimal());
+printf("%s\n", str_repeat('-', 40));
 
-print_r($tags->gps());
-print_r($tags->get('GPSLatitudeRef'));
-print_r($tags->get('GPSLongitudeRef'));
-// print_r($tags->toArray());
+// Photo with NUL bytes converted to list of integers
+$photoPath = __DIR__.'/heater-label.jpeg';
+$exifTags = new OneToMany\ExifTools\Reader\ExifTagReader()->read($photoPath);
 
-// $tags->getGps()->latitude;
+assert(true === $exifTags->get('ComponentsConfiguration')?->isList());
+
+printf("Photo: %s\n", basename($photoPath));
+printf("ComponentsConfiguration: [%s]\n", implode(',', $exifTags->get('ComponentsConfiguration')->value()));
