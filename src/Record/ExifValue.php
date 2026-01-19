@@ -97,7 +97,7 @@ final readonly class ExifValue
      *
      * @throws LogicException if the value is not an integer or string
      */
-    public function asDecimal(): ?float
+    public function toFloat(): ?float
     {
         if ($this->isList() || $this->isMap()) {
             throw new LogicException('Lists and maps cannot be converted to floating point numbers.');
@@ -148,6 +148,7 @@ final readonly class ExifValue
                     $nulByteList[] = ord($value[$i]);
                 }
 
+                // Likely an integer or enum value
                 if (1 === count($nulByteList)) {
                     return $nulByteList[0];
                 }

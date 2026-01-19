@@ -52,7 +52,7 @@ final readonly class GpsValue
         }
 
         if ($gpsAltitude && $gpsAltitude->isString()) {
-            $altitude = $gpsAltitude->asDecimal();
+            $altitude = $gpsAltitude->toFloat();
 
             // Photo was taken below sea level
             if (1 === $gpsAltitudeRef?->get()) {
@@ -74,6 +74,7 @@ final readonly class GpsValue
      */
     private static function toDMS(ExifList $list, string $direction): ?float
     {
+        // Ensure we have at least degrees and minutes
         list($deg, $min) = [$list->get(0), $list->get(1)];
 
         if (!$deg || !$min) {
@@ -86,7 +87,7 @@ final readonly class GpsValue
             return null;
         }
 
-        $degMinSec = $deg->asDecimal() + ($min->asDecimal() / 60) + ((float) $list->get(2)?->asDecimal() / 3600);
+        $degMinSec = $deg->toFloat() + ($min->toFloat() / 60) + ((float) $list->get(2)?->toFloat() / 3600);
 
         if (in_array(strtoupper($direction), ['W', 'S'])) {
             $degMinSec = -1.0 * $degMinSec;

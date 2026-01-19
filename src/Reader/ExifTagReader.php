@@ -14,6 +14,7 @@ use function is_readable;
 use function sprintf;
 
 /**
+ * @phpstan-import-type ExifValueList from ExifValue
  * @phpstan-import-type ExifValueMap from ExifValue
  */
 class ExifTagReader implements ExifTagReaderInterface
@@ -36,7 +37,7 @@ class ExifTagReader implements ExifTagReaderInterface
         }
 
         /**
-         * @var false|array<non-empty-string, int|string|list<int|string>|ExifValueMap> $exifTags
+         * @var false|array<non-empty-string, int|string|ExifValueList|ExifValueMap> $exifTags
          */
         $exifTags = @exif_read_data($path, null, false, false);
 
