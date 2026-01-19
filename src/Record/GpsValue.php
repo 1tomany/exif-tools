@@ -64,13 +64,13 @@ final readonly class GpsValue
     }
 
     /**
-     * Converts rational list coordinates to a floating point degree, minute, and second representation.
-     *
-     * For example, an ExifList with the values ["32/1", "54/1", "3930/100"] would become ~32.910916.
+     * Converts rational list coordinates to a floating point degree, minute,
+     * and second representation. For example, an ExifList with the values
+     * ["32/1", "54/1", "3930/100"] would become approximately 32.910916666.
      *
      * @param string $direction the direction the photo was taken in (N, S, E, W)
      *
-     * @return ?float returns null if the list does not have at least two elements or the direction is missing
+     * @return ?float null if the list does not have at least two elements or the direction is missing
      */
     private static function toDMS(ExifList $list, string $direction): ?float
     {
