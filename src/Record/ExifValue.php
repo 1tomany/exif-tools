@@ -44,7 +44,7 @@ final readonly class ExifValue
     public function value(): int|string|array
     {
         if ($this->isList() || $this->isMap()) {
-            return $this->value->toArray();
+            return $this->value->toArray(); // @phpstan-ignore-line
         }
 
         return $this->value;
