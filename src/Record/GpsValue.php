@@ -63,7 +63,16 @@ final readonly class GpsValue
         return new self($latitude, $longitude, $altitude);
     }
 
-    private static function toDMS(ExifList $list, string $ref): ?float
+    /**
+     * Converts rational list coordinates to a floating point degree, minute, and second representation.
+     *
+     * For example, an ExifList with the values ["32/1", "54/1", "3930/100"] would become ~32.910916.
+     *
+     * @param string $direction the direction the photo was taken in (N, S, E, W)
+     *
+     * @return ?float returns null if the list does not have at least two elements or the direction is missing
+     */
+    private static function toDMS(ExifList $list, string $direction): ?float
     {
         list($deg, $min) = [$list->get(0), $list->get(1)];
 
@@ -71,13 +80,15 @@ final readonly class GpsValue
             return null;
         }
 
-        if (!$ref = trim($ref)) {
+        $direction = trim($direction);
+
+        if (!$direction) {
             return null;
         }
 
         $degMinSec = $deg->asDecimal() + ($min->asDecimal() / 60) + ((float) $list->get(2)?->asDecimal() / 3600);
 
-        if (in_array(strtoupper($ref), ['W', 'S'])) {
+        if (in_array(strtoupper($direction), ['W', 'S'])) {
             $degMinSec = -1.0 * $degMinSec;
         }
 
