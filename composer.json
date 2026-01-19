@@ -8,11 +8,16 @@
     "keywords": [
         "exif",
         "gps",
+        "exif coordinates",
         "exif gps",
-        "exif read"
+        "exif latitude",
+        "exif longitude",
+        "exif read",
+        "exif reader"
     ],
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.4",
+        "ext-bcmath": "*",
         "ext-exif": "*"
     },
     "require-dev": {
