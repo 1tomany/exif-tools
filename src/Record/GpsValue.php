@@ -4,7 +4,10 @@ namespace OneToMany\ExifTools\Record;
 
 use OneToMany\ExifTools\Exception\InvalidArgumentException;
 
+use function bcdiv;
 use function in_array;
+use function number_format;
+use function round;
 use function strtoupper;
 use function trim;
 
@@ -61,6 +64,20 @@ final readonly class GpsValue
         }
 
         return new self($latitude, $longitude, $altitude);
+    }
+
+    public function getLatitudeDecimal(int $scale = 6): ?string
+    {
+        return $this->toDecimal($this->latitude, $scale);
+    }
+
+    private function toDecimal(?float $number, int $scale): ?string
+    {
+        if (null === $number) {
+            return null;
+        }
+
+        return bcdiv(number_format(round((float) $number, $scale), $scale, '.', ''), '1', $scale);
     }
 
     /**
