@@ -9,7 +9,7 @@ $finder = new Finder();
 $finder->in([
     './',
     './src/',
-    // './tests/',
+    './tests/',
 ]);
 
 $finder->exclude([
