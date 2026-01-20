@@ -16,23 +16,26 @@ use function count;
  *
  * @implements \IteratorAggregate<int|string, ExifValue>
  */
-final readonly class ExifMap implements \Countable, \IteratorAggregate
+final class ExifMap implements \Countable, \IteratorAggregate
 {
     /**
-     * @var array<int|string, ExifValue>
+     * @var array<string, ExifValue>
      */
-    private array $values;
+    private readonly array $values;
+
+    private ?GpsValue $gps = null;
 
     /**
      * @param array<int|string, int|string|ExifValueList|ExifValueMap> $values
      */
     public function __construct(array $values)
     {
-        $this->values = array_combine(array_keys($values), array_map(fn ($v) => new ExifValue($v), $values));
+        // Convert all keys to strings and all values to ExifValue objects
+        $this->values = array_combine(array_map(fn ($k) => (string) $k, array_keys($values)), array_map(fn ($v) => new ExifValue($v), $values));
     }
 
     /**
-     * @return array<int|string, ExifValue>
+     * @return array<string, ExifValue>
      */
     public function all(): array
     {
@@ -57,7 +60,7 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate
      */
     public function gps(): GpsValue
     {
-        return GpsValue::create(
+        $this->gps ??= GpsValue::create(
             $this->get('GPSLatitude'),
             $this->get('GPSLatitudeRef'),
             $this->get('GPSLongitude'),
@@ -65,6 +68,8 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate
             $this->get('GPSAltitude'),
             $this->get('GPSAltitudeRef'),
         );
+
+        return $this->gps;
     }
 
     /**
@@ -78,7 +83,7 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate
     /**
      * @see \IteratorAggregate
      *
-     * @return \ArrayIterator<int|string, ExifValue>
+     * @return \ArrayIterator<string, ExifValue>
      */
     public function getIterator(): \ArrayIterator
     {
@@ -86,7 +91,7 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate
     }
 
     /**
-     * @return array<int|string, int|string|ExifValueList|ExifValueMap>
+     * @return array<string, int|string|ExifValueList|ExifValueMap>
      */
     public function toArray(): array
     {

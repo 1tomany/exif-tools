@@ -84,6 +84,15 @@ final readonly class GpsValue
         return $this->toDecimal($this->altitude, $scale);
     }
 
+    /**
+     * @phpstan-assert-if-true float $this->latitude
+     * @phpstan-assert-if-true float $this->longitude
+     */
+    public function isValid(): bool
+    {
+        return null !== $this->latitude && null !== $this->longitude;
+    }
+
     private function toDecimal(?float $number, int $scale): ?string
     {
         if (null === $number) {

@@ -19,7 +19,7 @@ use function trim;
 
 /**
  * @phpstan-type ExifValueList list<int|string>
- * @phpstan-type ExifValueMap array<int|string, int|string>
+ * @phpstan-type ExifValueMap array<string, int|string>
  */
 final readonly class ExifValue
 {
