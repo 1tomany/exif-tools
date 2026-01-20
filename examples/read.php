@@ -10,11 +10,9 @@ $gps = $exifTags->gps();
 printf("Latitude: %s\n", $gps->getLatitudeDecimal());
 printf("Longitude: %s\n", $gps->getLongitudeDecimal());
 printf("Altitude: %sm\n", $gps->getAltitudeDecimal());
+printf("%s\n", $exifTags);
 
-foreach ($exifTags as $tag => $value) {
-    printf("%s: %s\n", $tag, (string) $value);
-}
-
+// print_R($exifTags->toArray());
 printf("%s\n", str_repeat('-', 40));
 
 // NUL bytes converted to list of integers

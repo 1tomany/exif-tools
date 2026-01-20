@@ -12,6 +12,7 @@ use function is_int;
 use function is_numeric;
 use function is_string;
 use function ord;
+use function sprintf;
 use function str_contains;
 use function strlen;
 use function substr_count;
@@ -35,11 +36,11 @@ final readonly class ExifValue implements \Stringable
 
     public function __toString(): string
     {
-        if ($this->isInt() || $this->isString()) {
+        if (false === $this->isString()) {
             return (string) $this->value;
         }
 
-        return $this->value->__toString();
+        return sprintf("'%s'", $this->value);
     }
 
     public function get(): int|string|ExifList|ExifMap
