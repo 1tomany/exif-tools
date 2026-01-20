@@ -44,7 +44,7 @@ final class GpsValueTest extends TestCase
         $this->assertTrue($altitude < GpsValue::MARIANA_TRENCH_DEPTH, sprintf('Altitude = %d', $altitude));
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The altitude "'.GpsValue::toDecimal($altitude, 2).'" must be greater than '.GpsValue::MARIANA_TRENCH_DEPTH.'.');
+        $this->expectExceptionMessage('The altitude "'.GpsValue::toDecimal($altitude, 2).'" must be greater than or equal to '.GpsValue::MARIANA_TRENCH_DEPTH.'.');
 
         new GpsValue(null, null, $altitude);
     }

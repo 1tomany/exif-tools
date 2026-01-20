@@ -30,7 +30,7 @@ final readonly class GpsValue
         }
 
         if (null !== $altitude && $altitude < self::MARIANA_TRENCH_DEPTH) {
-            throw new InvalidArgumentException(sprintf('The altitude "%s" must be greater than %d.', self::toDecimal($altitude, 2), self::MARIANA_TRENCH_DEPTH));
+            throw new InvalidArgumentException(sprintf('The altitude "%s" must be greater than or equal to %d.', self::toDecimal($altitude, 2), self::MARIANA_TRENCH_DEPTH));
         }
     }
 
