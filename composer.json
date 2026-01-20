@@ -1,6 +1,6 @@
 {
     "name": "1tomany/exif-tools",
-    "description": "A simple, no dependency library that makes working with EXIF data easier",
+    "description": "A simple, no dependency PHP library that makes working with EXIF data easier",
     "license": "MIT",
     "type": "library",
     "minimum-stability": "stable",
