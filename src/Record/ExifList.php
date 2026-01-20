@@ -30,7 +30,7 @@ final readonly class ExifList implements \Countable, \IteratorAggregate, \String
 
     public function __toString(): string
     {
-        return sprintf('[%s]', implode(',', array_map(fn ($v) => (string) $v, $this->values)));
+        return sprintf('%s[%s]', new \ReflectionClass($this)->getShortName(), implode(', ', array_map(fn ($v) => (string) $v, $this->values)));
     }
 
     /**

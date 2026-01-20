@@ -47,7 +47,7 @@ final class ExifMap implements \Countable, \IteratorAggregate, \Stringable
             ]);
         }
 
-        return sprintf('{%s}', implode(',', $stringValues));
+        return sprintf('%s{%s}', new \ReflectionClass($this)->getShortName(), implode(', ', $stringValues));
     }
 
     /**

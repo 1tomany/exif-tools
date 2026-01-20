@@ -29,7 +29,7 @@ final readonly class GpsValue
             throw new InvalidArgumentException(sprintf('The longitude "%s" must be between -180 and +180.', self::toDecimal($longitude, 6)));
         }
 
-        if (null !== $altitude && $altitude < -self::MARIANA_TRENCH_DEPTH) {
+        if (null !== $altitude && $altitude < self::MARIANA_TRENCH_DEPTH) {
             throw new InvalidArgumentException(sprintf('The altitude "%s" must be greater than %d.', self::toDecimal($altitude, 2), self::MARIANA_TRENCH_DEPTH));
         }
     }

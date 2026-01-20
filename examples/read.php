@@ -4,12 +4,17 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 // Photo with GPS coordinates and altitude
 $photoPath = __DIR__.'/utah-landscape.jpeg';
-$gps = new OneToMany\ExifTools\Reader\ExifTagReader()->read($photoPath)->gps();
+$exifTags = new OneToMany\ExifTools\Reader\ExifTagReader()->read($photoPath);
 
-printf("Photo: %s\n", basename($photoPath));
+$gps = $exifTags->gps();
 printf("Latitude: %s\n", $gps->getLatitudeDecimal());
 printf("Longitude: %s\n", $gps->getLongitudeDecimal());
 printf("Altitude: %sm\n", $gps->getAltitudeDecimal());
+
+foreach ($exifTags as $tag => $value) {
+    printf("%s: %s\n", $tag, (string) $value);
+}
+
 printf("%s\n", str_repeat('-', 40));
 
 // NUL bytes converted to list of integers
