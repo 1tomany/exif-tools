@@ -36,4 +36,16 @@ final class GpsValueTest extends TestCase
 
         new GpsValue(null, $longitude, null);
     }
+
+    public function testConstructorRequiresValidAltitude(): void
+    {
+        // Random altitude lower than the depth of the Mariana Trench
+        $altitude = -1 * random_int(GpsValue::MARIANA_TRENCH_DEPTH+1, \PHP_INT_MAX);
+        $this->assertTrue($altitude < GpsValue::MARIANA_TRENCH_DEPTH);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The altitude "'.GpsValue::toDecimal($altitude, 2).'" must be greater than '.GpsValue::MARIANA_TRENCH_DEPTH.'.');
+
+        new GpsValue(null, null, $altitude);
+    }
 }

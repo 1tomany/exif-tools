@@ -14,7 +14,7 @@ use function trim;
 
 final readonly class GpsValue
 {
-    private const int MARIANA_TRENCH_DEPTH = -10984;
+    public const int MARIANA_TRENCH_DEPTH = -10984;
 
     public function __construct(
         public ?float $latitude = null,
