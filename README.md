@@ -17,6 +17,10 @@ $exifTags = new ExifTagReader()->read('/path/to/photo.jpeg');
 
 var_dump($exifTags->has('FileName')); // bool(true)
 var_dump($exifTags->get('FileName')->value()); // string(10) "photo.jpeg"
+
+foreach ($exifTags as $tag => $value) {
+    printf("%s: %s\n", $tag, (string) $value);
+}
 ```
 
 Behind the scenes, each EXIF tag value is an object of type `ExifValue`. The `ExifValue` object can represent an integer, a string, an `ExifList`, or an `ExifMap`. Each element of an `ExifList` and `ExifMap` object is also an `ExifValue` object. 

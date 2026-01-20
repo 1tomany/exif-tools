@@ -21,7 +21,7 @@ use function trim;
  * @phpstan-type ExifValueList list<int|string>
  * @phpstan-type ExifValueMap array<string, int|string>
  */
-final readonly class ExifValue
+final readonly class ExifValue implements \Stringable
 {
     private int|string|ExifList|ExifMap $value;
 
@@ -31,6 +31,15 @@ final readonly class ExifValue
     public function __construct(int|string|array $value)
     {
         $this->value = $this->clean($value);
+    }
+
+    public function __toString(): string
+    {
+        if ($this->isInt() || $this->isString()) {
+            return (string) $this->value;
+        }
+
+        return $this->value->__toString();
     }
 
     public function get(): int|string|ExifList|ExifMap

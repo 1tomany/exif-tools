@@ -9,6 +9,9 @@ use function array_key_exists;
 use function array_keys;
 use function array_map;
 use function count;
+use function implode;
+use function sprintf;
+use function vsprintf;
 
 /**
  * @phpstan-import-type ExifValueList from ExifValue
@@ -16,7 +19,7 @@ use function count;
  *
  * @implements \IteratorAggregate<string, ExifValue>
  */
-final class ExifMap implements \Countable, \IteratorAggregate
+final class ExifMap implements \Countable, \IteratorAggregate, \Stringable
 {
     /**
      * @var array<string, ExifValue>
@@ -32,6 +35,19 @@ final class ExifMap implements \Countable, \IteratorAggregate
     {
         // Convert all keys to strings and all values to ExifValue objects
         $this->values = array_combine(array_map(fn ($k) => (string) $k, array_keys($values)), array_map(fn ($v) => new ExifValue($v), $values));
+    }
+
+    public function __toString(): string
+    {
+        $stringValues = [];
+
+        foreach ($this->values as $key => $value) {
+            $stringValues[] = vsprintf('%s: %s', [
+                $key, (string) $value,
+            ]);
+        }
+
+        return sprintf('{%s}', implode(',', $stringValues));
     }
 
     /**

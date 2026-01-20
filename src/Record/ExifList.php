@@ -4,6 +4,8 @@ namespace OneToMany\ExifTools\Record;
 
 use function array_map;
 use function count;
+use function implode;
+use function sprintf;
 
 /**
  * @phpstan-import-type ExifValueList from ExifValue
@@ -11,7 +13,7 @@ use function count;
  *
  * @implements \IteratorAggregate<int, ExifValue>
  */
-final readonly class ExifList implements \Countable, \IteratorAggregate
+final readonly class ExifList implements \Countable, \IteratorAggregate, \Stringable
 {
     /**
      * @var list<ExifValue>
@@ -24,6 +26,11 @@ final readonly class ExifList implements \Countable, \IteratorAggregate
     public function __construct(array $values)
     {
         $this->values = array_map(fn ($v) => new ExifValue($v), $values);
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('[%s]', implode(',', array_map(fn ($v) => (string) $v, $this->values)));
     }
 
     /**
