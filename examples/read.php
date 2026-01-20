@@ -6,7 +6,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 $exifTags = new OneToMany\ExifTools\Reader\ExifTagReader()->read(__DIR__.'/utah-landscape.jpeg');
 
 if ($name = $exifTags->get('FileName')) {
-    printf("FileName: %s\n", $name);
+    printf("FileName: %s\n", (string) $name);
 }
 
 printf("Latitude: %s\n", $exifTags->gps()->getLatitudeDecimal());
@@ -18,10 +18,10 @@ printf("%s\n", str_repeat('-', 40));
 $exifTags = new OneToMany\ExifTools\Reader\ExifTagReader()->read(__DIR__.'/heater-label.jpeg');
 
 if ($name = $exifTags->get('FileName')) {
-    printf("FileName: %s\n", $name);
+    printf("FileName: %s\n", (string) $name);
 }
 
-// isList() returning true ensures get() returns an ExifValue object
+// isList() = true ensures get() returns an ExifValue object
 assert(true === $exifTags->get('ComponentsConfiguration')?->isList());
 
 // ComponentsConfiguration is usally a list encoded as binary bytes

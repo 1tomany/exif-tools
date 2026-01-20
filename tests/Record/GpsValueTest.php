@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 use function random_int;
+use function sprintf;
 
 #[Group('UnitTests')]
 #[Group('RecordTests')]
@@ -15,11 +16,8 @@ final class GpsValueTest extends TestCase
 {
     public function testConstructorRequiresValidLatitude(): void
     {
-        $signFlipper = 0 === random_int(0, 1) ? -1 : 1;
-
         // Latitude less than -90 or greater than +90
-        $latitude = ($signFlipper * random_int(90, 180));
-        $this->assertTrue($latitude < -90 || $latitude > 90);
+        $latitude = (0 === random_int(0, 1) ? -1 : 1) * random_int(91, 180);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The latitude "'.GpsValue::toDecimal($latitude, 6).'" must be between -90 and +90.');
@@ -29,11 +27,8 @@ final class GpsValueTest extends TestCase
 
     public function testConstructorRequiresValidLongitude(): void
     {
-        $signFlipper = 0 === random_int(0, 1) ? -1 : 1;
-
         // Longitude less than -180 or greater than +180
-        $longitude = $signFlipper * random_int(180, 360);
-        $this->assertTrue($longitude < -180 || $longitude > 180);
+        $longitude = (0 === random_int(0, 1) ? -1 : 1) * random_int(181, 360);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The longitude "'.GpsValue::toDecimal($longitude, 6).'" must be between -180 and +180.');
@@ -45,7 +40,7 @@ final class GpsValueTest extends TestCase
     {
         // Altitude lower than the depth of the Mariana Trench
         $altitude = -1 * random_int(GpsValue::MARIANA_TRENCH_DEPTH + 1, GpsValue::MARIANA_TRENCH_DEPTH + 1_000_000);
-        $this->assertTrue($altitude < GpsValue::MARIANA_TRENCH_DEPTH);
+        $this->assertTrue($altitude < GpsValue::MARIANA_TRENCH_DEPTH, sprintf('Altitude = %d', $altitude));
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The altitude "'.GpsValue::toDecimal($altitude, 2).'" must be greater than '.GpsValue::MARIANA_TRENCH_DEPTH.'.');
