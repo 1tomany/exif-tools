@@ -18,6 +18,7 @@ final class GpsValueTest extends TestCase
     {
         // Latitude less than -90 or greater than +90
         $latitude = (0 === random_int(0, 1) ? -1 : 1) * random_int(91, 180);
+        $this->assertTrue($latitude < -90 || $latitude > 90, sprintf('Latitude = %d', $latitude));
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The latitude "'.GpsValue::toDecimal($latitude, 6).'" must be between -90 and +90.');
@@ -39,7 +40,7 @@ final class GpsValueTest extends TestCase
     public function testConstructorRequiresValidAltitude(): void
     {
         // Altitude lower than the depth of the Mariana Trench
-        $altitude = -1 * random_int(GpsValue::MARIANA_TRENCH_DEPTH + 1, GpsValue::MARIANA_TRENCH_DEPTH + 1_000_000);
+        $altitude = random_int(2 * GpsValue::MARIANA_TRENCH_DEPTH, GpsValue::MARIANA_TRENCH_DEPTH - 1);
         $this->assertTrue($altitude < GpsValue::MARIANA_TRENCH_DEPTH, sprintf('Altitude = %d', $altitude));
 
         $this->expectException(InvalidArgumentException::class);
