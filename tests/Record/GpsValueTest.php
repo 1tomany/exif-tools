@@ -9,8 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 use function random_int;
 
-use const PHP_INT_MAX;
-
 #[Group('UnitTests')]
 #[Group('RecordTests')]
 final class GpsValueTest extends TestCase
