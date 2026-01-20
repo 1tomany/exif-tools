@@ -30,7 +30,7 @@ final class ExifTagReaderTest extends TestCase
 
     public function testReadingFileRequiresImageWithExifData(): void
     {
-        $path = __DIR__ . '/../data/extract.dev-sticker.png';
+        $path = __DIR__.'/../data/extract.dev-sticker.png';
         $this->assertFileExists($path);
         $this->assertFileIsReadable($path);
 
