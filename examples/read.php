@@ -6,7 +6,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 $exifTags = new OneToMany\ExifTools\Reader\ExifTagReader()->read(__DIR__.'/utah-landscape.jpeg');
 
 if ($name = $exifTags->get('FileName')) {
-    printf("FileName: %s\n", $name->value());
+    printf("FileName: %s\n", $name);
 }
 
 printf("Latitude: %s\n", $exifTags->gps()->getLatitudeDecimal());
@@ -18,7 +18,7 @@ printf("%s\n", str_repeat('-', 40));
 $exifTags = new OneToMany\ExifTools\Reader\ExifTagReader()->read(__DIR__.'/heater-label.jpeg');
 
 if ($name = $exifTags->get('FileName')) {
-    printf("FileName: %s\n", $name->value());
+    printf("FileName: %s\n", $name);
 }
 
 // isList() returning true ensures get() returns an ExifValue object
