@@ -4,8 +4,11 @@ namespace OneToMany\ExifTools\Tests\Reader;
 
 use OneToMany\ExifTools\Exception\InvalidArgumentException;
 use OneToMany\ExifTools\Reader\ExifTagReader;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
+#[Group('UnitTests')]
+#[Group('ReaderTests')]
 final class ExifTagReaderTest extends TestCase
 {
     public function testReadingFileRequiresReadableFile(): void
