@@ -92,14 +92,29 @@ final readonly class GpsValue
         return bcdiv(number_format(round((float) $number, $scale), $scale, '.', ''), '1', $scale);
     }
 
+    public function getLatitude(): ?float
+    {
+        return $this->latitude;
+    }
+
     public function getLatitudeDecimal(int $scale = 6): ?string
     {
         return self::toDecimal($this->latitude, $scale);
     }
 
+    public function getLongitude(): ?float
+    {
+        return $this->longitude;
+    }
+
     public function getLongitudeDecimal(int $scale = 6): ?string
     {
         return self::toDecimal($this->longitude, $scale);
+    }
+
+    public function getAltitude(): ?float
+    {
+        return $this->altitude;
     }
 
     public function getAltitudeDecimal(int $scale = 2): ?string
