@@ -18,8 +18,9 @@ $exifTags = new ExifTagReader()->read('/path/to/photo.jpeg');
 var_dump($exifTags->has('FileName')); // bool(true)
 var_dump($exifTags->get('FileName')->value()); // string(10) "photo.jpeg"
 
+// Iterate over the tags
 foreach ($exifTags as $tag => $value) {
-    printf("%s: %s\n", $tag, (string) $value);
+    printf("%s: %s\n", $tag, $value);
 }
 ```
 
