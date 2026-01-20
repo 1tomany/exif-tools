@@ -3,24 +3,26 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 // Photo with GPS coordinates and altitude
-$photoPath = __DIR__.'/utah-landscape.jpeg';
-$exifTags = new OneToMany\ExifTools\Reader\ExifTagReader()->read($photoPath);
+$exifTags = new OneToMany\ExifTools\Reader\ExifTagReader()->read(__DIR__.'/utah-landscape.jpeg');
 
-$gps = $exifTags->gps();
-printf("Latitude: %s\n", $gps->getLatitudeDecimal());
-printf("Longitude: %s\n", $gps->getLongitudeDecimal());
-printf("Altitude: %sm\n", $gps->getAltitudeDecimal());
-printf("%s\n", $exifTags);
+if ($name = $exifTags->get('FileName')) {
+    printf("FileName: %s\n", $name->value());
+}
 
-// print_R($exifTags->toArray());
+printf("Latitude: %s\n", $exifTags->gps()->getLatitudeDecimal());
+printf("Longitude: %s\n", $exifTags->gps()->getLongitudeDecimal());
+printf("Altitude: %sm\n", $exifTags->gps()->getAltitudeDecimal());
 printf("%s\n", str_repeat('-', 40));
 
 // NUL bytes converted to list of integers
-$photoPath = __DIR__.'/heater-label.jpeg';
-$exifTags = new OneToMany\ExifTools\Reader\ExifTagReader()->read($photoPath);
+$exifTags = new OneToMany\ExifTools\Reader\ExifTagReader()->read(__DIR__.'/heater-label.jpeg');
+
+if ($name = $exifTags->get('FileName')) {
+    printf("FileName: %s\n", $name->value());
+}
 
 // isList() returning true ensures get() returns an ExifValue object
 assert(true === $exifTags->get('ComponentsConfiguration')?->isList());
 
-printf("Photo: %s\n", basename($photoPath));
+// ComponentsConfiguration is usally a list encoded as binary bytes
 printf("ComponentsConfiguration: [%s]\n", implode(',', $exifTags->get('ComponentsConfiguration')->value()));
