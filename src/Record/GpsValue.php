@@ -8,16 +8,30 @@ use function bcdiv;
 use function in_array;
 use function number_format;
 use function round;
+use function sprintf;
 use function strtoupper;
 use function trim;
 
 final readonly class GpsValue
 {
+    private const int MARIANA_TRENCH_DEPTH = -10984;
+
     public function __construct(
         public ?float $latitude = null,
         public ?float $longitude = null,
         public ?float $altitude = null,
     ) {
+        if (null !== $latitude && ($latitude < -90.0 || $latitude > 90.0)) {
+            throw new InvalidArgumentException(sprintf('The latitude "%.8f" must be between -90 and +90.', $latitude));
+        }
+
+        if (null !== $longitude && ($longitude < -180.0 || $longitude > 180.0)) {
+            throw new InvalidArgumentException(sprintf('The longitude "%.8f" must be between -180 and +180.', $longitude));
+        }
+
+        if (null !== $altitude && $altitude < -self::MARIANA_TRENCH_DEPTH) {
+            throw new InvalidArgumentException(sprintf('The altitude "%.8f" must be greater than %d.', $altitude, self::MARIANA_TRENCH_DEPTH));
+        }
     }
 
     /**
