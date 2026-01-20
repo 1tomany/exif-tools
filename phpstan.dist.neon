@@ -4,4 +4,4 @@ parameters:
     paths:
         - ./examples/
         - ./src/
-        # - ./tests/
+        - ./tests/
