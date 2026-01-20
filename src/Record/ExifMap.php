@@ -14,7 +14,7 @@ use function count;
  * @phpstan-import-type ExifValueList from ExifValue
  * @phpstan-import-type ExifValueMap from ExifValue
  *
- * @implements \IteratorAggregate<int|string, ExifValue>
+ * @implements \IteratorAggregate<string, ExifValue>
  */
 final class ExifMap implements \Countable, \IteratorAggregate
 {
