@@ -20,6 +20,9 @@ final readonly class GpsValue
     ) {
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public static function create(
         ?ExifValue $gpsLatitude,
         ?ExifValue $gpsLatitudeRef,

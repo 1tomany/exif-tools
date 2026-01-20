@@ -2,6 +2,8 @@
 
 namespace OneToMany\ExifTools\Record;
 
+use OneToMany\ExifTools\Exception\InvalidArgumentException;
+
 use function array_combine;
 use function array_key_exists;
 use function array_keys;
@@ -50,6 +52,9 @@ final readonly class ExifMap implements \Countable, \IteratorAggregate
         return $this->values[$tag] ?? null;
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function gps(): GpsValue
     {
         return GpsValue::create(
