@@ -5,7 +5,6 @@ namespace OneToMany\ExifTools\Record;
 use OneToMany\ExifTools\Exception\LogicException;
 
 use function array_is_list;
-use function count;
 use function ctype_digit;
 use function explode;
 use function is_int;
@@ -174,30 +173,30 @@ final readonly class ExifValue implements \Stringable
             // Determine if the string contains
             // any control bytes and attempt to
             // convert them to an integer or list
-            $valueHasControlCharacters = false;
-
             if (0 !== $length = strlen($value)) {
+                $hasControlBytes = false;
+
                 for ($i = 0; $i < $length; ++$i) {
                     $c = ord($value[$i]);
 
                     if ($c < 0x20 || 0x7F === $c) {
-                        $valueHasControlCharacters = true;
+                        $hasControlBytes = true;
                     }
                 }
-            }
 
-            if ($valueHasControlCharacters) {
-                $controlBytes = [];
+                if ($hasControlBytes) {
+                    $controlBytes = [];
 
-                for ($i = 0; $i < $length; ++$i) {
-                    $controlBytes[] = ord($value[$i]);
+                    for ($i = 0; $i < $length; ++$i) {
+                        $controlBytes[] = ord($value[$i]);
+                    }
+
+                    if (!isset($controlBytes[1])) {
+                        return $controlBytes[0];
+                    }
+
+                    return new ExifList($controlBytes);
                 }
-
-                if (1 === count($controlBytes)) {
-                    return $controlBytes[0];
-                }
-
-                return new ExifList($controlBytes);
             }
 
             return trim($value);
