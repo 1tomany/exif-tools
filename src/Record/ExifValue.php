@@ -140,7 +140,7 @@ final readonly class ExifValue implements \Stringable
                     $format = 'Y:m:d H:i:s';
                 }
 
-                $timestamp = \DateTimeImmutable::createFromFormat($format, (string) $this->value);
+                $timestamp = \DateTimeImmutable::createFromFormat($format, $this->value);
             }
         } catch (\DateMalformedStringException) {
         }
