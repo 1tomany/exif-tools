@@ -25,7 +25,7 @@ final class ExifValueTest extends TestCase
     }
 
     #[DataProvider('providerIntegerTimestamp')]
-    public function testIntegerToTimestamp(int $timestamp): void
+    public function testToTimestampWithInteger(int $timestamp): void
     {
         $this->assertInstanceOf(\DateTimeImmutable::class, new ExifValue($timestamp)->toTimestamp());
     }
@@ -48,5 +48,31 @@ final class ExifValueTest extends TestCase
         ];
 
         return $provider;
+    }
+
+    public function testToTimestampWithStringRequiresValidFormat(): void
+    {
+        $this->assertNull(new ExifValue('invalid timestamp')->toTimestamp());
+    }
+
+    /**
+     * @param non-empty-string $timestamp
+     */
+    #[DataProvider('providerStringTimestamp')]
+    public function testToTimestampWithString(string $timestamp): void
+    {
+        $this->assertInstanceOf(\DateTimeImmutable::class, new ExifValue($timestamp)->toTimestamp());
+    }
+
+    /**
+     * @return list<list<non-empty-string>>
+     */
+    public static function providerStringTimestamp(): array
+    {
+        return [
+            ['0000:00:00 00:00:00'],
+            ['0000:00:01 00:00:00'],
+            ['2021:05:06 09:49:11'],
+        ];
     }
 }
