@@ -156,7 +156,7 @@ final readonly class ExifValue implements \Stringable
         } catch (\DateMalformedStringException) {
         }
 
-        return ($timestamp ?? null) ?: null;
+        return ($timestamp ?? null);
     }
 
     /**
