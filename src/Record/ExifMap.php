@@ -71,6 +71,13 @@ final class ExifMap implements \Countable, \IteratorAggregate, \Stringable
         return $this->values[$tag] ?? null;
     }
 
+    public function getTimestamp(string $tag): ?\DateTimeImmutable
+    {
+        if (null !== $value = $this->get($tag)) {
+            // $timestamp = \date_create_immutable($value->);
+        }
+    }
+
     /**
      * @throws InvalidArgumentException
      */

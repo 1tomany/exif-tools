@@ -130,6 +130,24 @@ final readonly class ExifValue implements \Stringable
         return is_numeric($this->value) ? (float) $this->value : null;
     }
 
+    public function toTimestamp(): ?\DateTimeImmutable
+    {
+        try {
+            if ($this->isInt() || $this->isString()) {
+                if ($this->isInt()) {
+                    $format = 'U';
+                } else {
+                    $format = 'Y:m:d H:i:s';
+                }
+
+                $timestamp = \DateTimeImmutable::createFromFormat($format, (string) $this->value);
+            }
+        } catch (\DateMalformedStringException) {
+        }
+
+        return ($timestamp ?? null) ?: null;
+    }
+
     /**
      * @param int|string|ExifValueList|ExifValueMap $value
      */

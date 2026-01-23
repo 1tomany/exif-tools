@@ -12,6 +12,7 @@ if ($name = $exifTags->get('FileName')) {
 printf("Latitude: %s\n", $exifTags->gps()->getLatitudeDecimal());
 printf("Longitude: %s\n", $exifTags->gps()->getLongitudeDecimal());
 printf("Altitude: %sm\n", $exifTags->gps()->getAltitudeDecimal());
+print_r($exifTags->toArray());
 printf("%s\n", str_repeat('-', 40));
 
 // NUL bytes converted to list of integers
