@@ -195,12 +195,23 @@ final readonly class ExifValue implements \Stringable
                 return (int) $value;
             }
 
-            // Attempt to convert control bytes
-            // to a human readable representation
-            if (self::hasControlBytes($value)) {
+            // Determine if the string contains any control bytes and attempt to convert them to a human readable representation
+            $hasControlBytes = false;
+
+            if ($length = strlen($value)) {
+                for ($i=0; $i<$length; $i++) {
+                    $c = ord($value[$i]);
+
+                    if ($c < 0x20 || $c === 0x7F) {
+                        $hasControlBytes = true;
+                    }
+                }
+            }
+
+            if (true === $hasControlBytes) {
                 $controlBytes = [];
 
-                for ($i = 0; $i < strlen($value); ++$i) {
+                for ($i = 0; $i < $length; ++$i) {
                     $controlBytes[] = ord($value[$i]);
                 }
 
