@@ -97,7 +97,7 @@ final readonly class ExifValue implements \Stringable
     /**
      * This attempts to convert integers, numeric strings, and fractional strings to
      * a floating point number. EXIF encodes decimals as a fraction (ex: "3930/100"),
-     * so the fractional components are extracted, divded, and returned as a float.
+     * so the fractional components are extracted, divided, and returned as a float.
      *
      * @throws LogicException if the value is not an integer or string
      */
