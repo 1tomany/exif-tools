@@ -12,7 +12,6 @@ use function is_int;
 use function is_numeric;
 use function is_string;
 use function ord;
-use function str_contains;
 use function strlen;
 use function substr_count;
 use function trim;
@@ -157,28 +156,6 @@ final readonly class ExifValue implements \Stringable
         return null;
     }
 
-    private static function hasControlBytes(string $value): bool
-    {
-        $length = strlen($value);
-
-        if (0 === $length) {
-            return false;
-        }
-
-        for ($i=0; $i<$length; $i++) {
-            $c = ord($value[$i]);
-
-            if ($c < 0x20) {
-                return true;
-            }
-
-            if ($c === 0x7F) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     /**
      * @param int|string|ExifValueList|ExifValueMap $value
@@ -195,20 +172,22 @@ final readonly class ExifValue implements \Stringable
                 return (int) $value;
             }
 
-            // Determine if the string contains any control bytes and attempt to convert them to a human readable representation
-            $hasControlBytes = false;
+            // Determine if the string contains
+            // any control bytes and attempt to
+            // convert them to an integer or list
+            $valueHasNonAsciiControlBytes = false;
 
-            if ($length = strlen($value)) {
-                for ($i=0; $i<$length; $i++) {
+            if (0 !== $length = strlen($value)) {
+                for ($i = 0; $i < $length; ++$i) {
                     $c = ord($value[$i]);
 
-                    if ($c < 0x20 || $c === 0x7F) {
-                        $hasControlBytes = true;
+                    if ($c < 0x20 || 0x7F === $c) {
+                        $valueHasNonAsciiControlBytes = true;
                     }
                 }
             }
 
-            if (true === $hasControlBytes) {
+            if ($valueHasNonAsciiControlBytes) {
                 $controlBytes = [];
 
                 for ($i = 0; $i < $length; ++$i) {
