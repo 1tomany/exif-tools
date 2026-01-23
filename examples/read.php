@@ -2,7 +2,7 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-$separator = function(int $length = 60): void {
+$separator = function (int $length = 60): void {
     printf("%s\n", str_repeat('-', $length));
 };
 
@@ -14,7 +14,7 @@ $separator();
 $exifTags = $exifTagReader->read(__DIR__.'/example-ComponentsConfiguration.jpeg');
 
 if ($name = $exifTags->get('FileName')) {
-    printf("FileName: %s\n", $name->value());
+    printf("FileName: %s\n", (string) $name);
 }
 
 if ($componentsConfiguration = $exifTags->get('ComponentsConfiguration')) {
@@ -27,7 +27,7 @@ $separator();
 $exifTags = $exifTagReader->read(__DIR__.'/example-GPSCoordinates.jpeg');
 
 if ($name = $exifTags->get('FileName')) {
-    printf("FileName: %s\n", $name->value());
+    printf("FileName: %s\n", (string) $name);
 }
 
 if (null !== $capturedAt = $exifTags->capturedAt()) {
@@ -46,11 +46,11 @@ $separator();
 $exifTags = $exifTagReader->read(__DIR__.'/example-SceneType.jpeg');
 
 if ($name = $exifTags->get('FileName')) {
-    printf("FileName: %s\n", $name->value());
+    printf("FileName: %s\n", (string) $name);
 }
 
 if ($sceneType = $exifTags->get('SceneType')) {
-    printf("SceneType: %s\n", $sceneType->value());
+    printf("SceneType: %s\n", (string) $sceneType);
 }
 
 $separator();
