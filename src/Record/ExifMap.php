@@ -77,8 +77,9 @@ final class ExifMap implements \Countable, \IteratorAggregate, \Stringable
     }
 
     /**
-     * Attempts to determine when the photo was captured by analyzing the
-     * following tags: DateTimeOriginal, DateTimeDigitized, and DateTime.
+     * Attempts to determine when the photo was captured
+     * by analyzing the following tags in this order:
+     * DateTimeOriginal, DateTimeDigitized, and DateTime.
      */
     public function capturedAt(): ?\DateTimeImmutable
     {
