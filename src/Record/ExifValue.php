@@ -184,16 +184,13 @@ final readonly class ExifValue implements \Stringable
                     }
                 }
 
+                // At least one control byte exists
                 if (isset($controlCharacters[0])) {
-                    // for ($i = 0; $i < $length; ++$i) {
-                    //     $controlCharacters[] = ord($value[$i]);
-                    // }
-
                     if (!isset($controlCharacters[1])) {
-                        return $controlCharacters[0];
+                        return $controlCharacters[0]; // Store single byte control characters as an integer
                     }
 
-                    return new ExifList($controlCharacters);
+                    return new ExifList($controlCharacters); // Store multibyte characters as a list of integers
                 }
             }
 
