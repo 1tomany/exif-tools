@@ -156,7 +156,6 @@ final readonly class ExifValue implements \Stringable
         return null;
     }
 
-
     /**
      * @param int|string|ExifValueList|ExifValueMap $value
      */
