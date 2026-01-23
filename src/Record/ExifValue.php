@@ -131,6 +131,33 @@ final readonly class ExifValue implements \Stringable
     }
 
     /**
+     * Attempts to convert integers and strings to a
+     * timestamp. Strings will be evaluated using the
+     * formats 'Y:m:d H:i:s' and 'Y:m:d' in that order.
+     */
+    public function toTimestamp(): ?\DateTimeImmutable
+    {
+        try {
+            if ($this->isInt()) {
+                return \DateTimeImmutable::createFromTimestamp($this->value);
+            }
+
+            if ($this->isString()) {
+                foreach (['Y:m:d H:i:s', 'Y:m:d'] as $stringFormat) {
+                    $timestamp = \DateTimeImmutable::createFromFormat($stringFormat, $this->value);
+
+                    if (false !== $timestamp) {
+                        return $timestamp;
+                    }
+                }
+            }
+        } catch (\DateException) {
+        }
+
+        return null;
+    }
+
+    /**
      * @param int|string|ExifValueList|ExifValueMap $value
      */
     private function clean(int|string|array $value): int|string|ExifList|ExifMap

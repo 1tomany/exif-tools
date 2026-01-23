@@ -16,6 +16,11 @@ final readonly class GpsValue
 {
     public const int MARIANA_TRENCH_DEPTH = -10984;
 
+    /**
+     * @throws InvalidArgumentException if $latitude is not null and less than -90.0 or greater than 90.0
+     * @throws InvalidArgumentException if $longitude is not null and less than -180.0 or greater than 180.0
+     * @throws InvalidArgumentException if $altitude is not null and less than -10984 (lowest point on Earth)
+     */
     public function __construct(
         public ?float $latitude = null,
         public ?float $longitude = null,
@@ -35,7 +40,10 @@ final readonly class GpsValue
     }
 
     /**
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException if $gpsLatitude is not null and not a list
+     * @throws InvalidArgumentException if $gpsLatitudeRef is not null and not a string
+     * @throws InvalidArgumentException if $gpsLongitude is not null and not a list
+     * @throws InvalidArgumentException if $gpsLongitudeRef is not null and not a string
      */
     public static function create(
         ?ExifValue $gpsLatitude,

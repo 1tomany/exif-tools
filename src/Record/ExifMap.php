@@ -71,6 +71,37 @@ final class ExifMap implements \Countable, \IteratorAggregate, \Stringable
         return $this->values[$tag] ?? null;
     }
 
+    public function getTimestamp(string $tag): ?\DateTimeImmutable
+    {
+        return $this->get($tag)?->toTimestamp();
+    }
+
+    /**
+     * Attempts to determine when the photo was captured
+     * by analyzing the following tags in this order:
+     * DateTimeOriginal, DateTimeDigitized, and DateTime.
+     */
+    public function capturedAt(): ?\DateTimeImmutable
+    {
+        $dateTimeTags = [
+            'DateTimeOriginal',
+            'DateTimeDigitized',
+            'DateTime',
+        ];
+
+        foreach ($dateTimeTags as $dateTimeTag) {
+            $capturedAt = $this->getTimestamp(...[
+                'tag' => $dateTimeTag,
+            ]);
+
+            if (null !== $capturedAt) {
+                return $capturedAt;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * @throws InvalidArgumentException
      */
