@@ -5,14 +5,12 @@ namespace OneToMany\ExifTools\Record;
 use OneToMany\ExifTools\Exception\LogicException;
 
 use function array_is_list;
-use function count;
 use function ctype_digit;
 use function explode;
 use function is_int;
 use function is_numeric;
 use function is_string;
 use function ord;
-use function str_contains;
 use function strlen;
 use function substr_count;
 use function trim;
@@ -98,7 +96,7 @@ final readonly class ExifValue implements \Stringable
     /**
      * This attempts to convert integers, numeric strings, and fractional strings to
      * a floating point number. EXIF encodes decimals as a fraction (ex: "3930/100"),
-     * so the fractional components are extracted, divded, and returned as a float.
+     * so the fractional components are extracted, divided, and returned as a float.
      *
      * @throws LogicException if the value is not an integer or string
      */
@@ -172,20 +170,26 @@ final readonly class ExifValue implements \Stringable
                 return (int) $value;
             }
 
-            // Attempt to convert NUL bytes
-            if (str_contains($value, "\x00")) {
-                $nulByteList = [];
+            // Convert control bytes to integers
+            if ($valueLength = strlen($value)) {
+                $controlCharacters = [];
 
-                for ($i = 0; $i < strlen($value); ++$i) {
-                    $nulByteList[] = ord($value[$i]);
+                for ($i = 0; $i < $valueLength; ++$i) {
+                    $c = ord($value[$i]);
+
+                    if ($c < 0x20 || 0x7F === $c) {
+                        $controlCharacters[] = $c;
+                    }
                 }
 
-                // Likely an integer or enum value
-                if (1 === count($nulByteList)) {
-                    return $nulByteList[0];
-                }
+                // Value has at least one control byte
+                if (isset($controlCharacters[0])) {
+                    if (!isset($controlCharacters[1])) {
+                        return $controlCharacters[0]; // Single byte strings are stored as an integer
+                    }
 
-                return new ExifList($nulByteList);
+                    return new ExifList($controlCharacters); // Multibyte strings are stored as a list of integers
+                }
             }
 
             return trim($value);
