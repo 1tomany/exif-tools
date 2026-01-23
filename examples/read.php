@@ -2,7 +2,13 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
+$separator = function(int $length = 60): void {
+    printf("%s\n", str_repeat('-', $length));
+};
+
 $exifTagReader = new OneToMany\ExifTools\Reader\ExifTagReader();
+
+$separator();
 
 // Photo with ComponentsConfiguration tag containing NUL bytes
 $exifTags = $exifTagReader->read(__DIR__.'/example-ComponentsConfiguration.jpeg');
@@ -15,7 +21,7 @@ if ($componentsConfiguration = $exifTags->get('ComponentsConfiguration')) {
     printf("ComponentsConfiguration: %s\n", (string) $componentsConfiguration);
 }
 
-printf("%s\n", str_repeat('-', 40));
+$separator();
 
 // Photo with creation timestamp, GPS coordinates, and altitude
 $exifTags = $exifTagReader->read(__DIR__.'/example-GPSCoordinates.jpeg');
@@ -34,7 +40,7 @@ if (true === ($gps = $exifTags->gps())->isValid()) {
     printf("Altitude: %sm\n", $gps->getAltitudeDecimal());
 }
 
-printf("%s\n", str_repeat('-', 40));
+$separator();
 
 // Photo with SceneType tag containing a control character
 $exifTags = $exifTagReader->read(__DIR__.'/example-SceneType.jpeg');
@@ -47,4 +53,4 @@ if ($sceneType = $exifTags->get('SceneType')) {
     printf("SceneType: %s\n", $sceneType->value());
 }
 
-printf("%s\n", str_repeat('-', 40));
+$separator();
