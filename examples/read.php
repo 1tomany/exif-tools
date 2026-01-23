@@ -9,7 +9,7 @@ if ($name = $exifTags->get('FileName')) {
     printf("FileName: %s\n", (string) $name);
 }
 
-printf("CapturedAt: %s\n", $exifTags->getTimestamp('DateTimeOriginal')?->format('Y-m-d H:i:s'));
+printf("CapturedAt: %s\n", $exifTags->capturedAt()?->format('Y-m-d H:i:s'));
 printf("Latitude: %s\n", $exifTags->gps()->getLatitudeDecimal());
 printf("Longitude: %s\n", $exifTags->gps()->getLongitudeDecimal());
 printf("Altitude: %sm\n", $exifTags->gps()->getAltitudeDecimal());

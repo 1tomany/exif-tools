@@ -2,7 +2,6 @@
 
 namespace OneToMany\ExifTools\Record;
 
-use DateTimeImmutable;
 use OneToMany\ExifTools\Exception\LogicException;
 
 use function array_is_list;
@@ -132,8 +131,9 @@ final readonly class ExifValue implements \Stringable
     }
 
     /**
-     * Attempts to convert integers and strings to a timestamp. Strings must be in the format Y:m:d H:i:s to be considered valid.
-     * @return null|DateTimeImmutable
+     * Attempts to convert integers and strings to a
+     * timestamp. Strings will be evaluated using the
+     * formats 'Y:m:d H:i:s' and 'Y:m:d' in that order.
      */
     public function toTimestamp(): ?\DateTimeImmutable
     {
@@ -143,9 +143,7 @@ final readonly class ExifValue implements \Stringable
             }
 
             if ($this->isString()) {
-                $stringFormats = ['Y:m:d H:i:s', 'Y:m:d'];
-
-                foreach ($stringFormats as $stringFormat) {
+                foreach (['Y:m:d H:i:s', 'Y:m:d'] as $stringFormat) {
                     $timestamp = \DateTimeImmutable::createFromFormat($stringFormat, $this->value);
 
                     if (false !== $timestamp) {
@@ -156,7 +154,7 @@ final readonly class ExifValue implements \Stringable
         } catch (\DateMalformedStringException) {
         }
 
-        return ($timestamp ?? null);
+        return null;
     }
 
     /**
