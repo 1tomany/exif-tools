@@ -53,6 +53,4 @@ if ($sceneType = $exifTags->get('SceneType')) {
     printf("SceneType: %s\n", (string) $sceneType);
 }
 
-print_r($exifTags->toArray());
-
 $separator();

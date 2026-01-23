@@ -170,9 +170,7 @@ final readonly class ExifValue implements \Stringable
                 return (int) $value;
             }
 
-            // Determine if the string contains
-            // any control bytes and attempt to
-            // convert them to an integer or list
+            // Convert control bytes to integers
             if ($valueLength = strlen($value)) {
                 $controlCharacters = [];
 
@@ -184,13 +182,13 @@ final readonly class ExifValue implements \Stringable
                     }
                 }
 
-                // At least one control byte exists
+                // Value has at least one control byte
                 if (isset($controlCharacters[0])) {
                     if (!isset($controlCharacters[1])) {
-                        return $controlCharacters[0]; // Store single byte control characters as an integer
+                        return $controlCharacters[0]; // Single byte strings are stored as an integer
                     }
 
-                    return new ExifList($controlCharacters); // Store multibyte characters as a list of integers
+                    return new ExifList($controlCharacters); // Multibyte strings are stored as a list of integers
                 }
             }
 
