@@ -173,29 +173,27 @@ final readonly class ExifValue implements \Stringable
             // Determine if the string contains
             // any control bytes and attempt to
             // convert them to an integer or list
-            if (0 !== $length = strlen($value)) {
-                $hasControlBytes = false;
+            if ($valueLength = strlen($value)) {
+                $controlCharacters = [];
 
-                for ($i = 0; $i < $length; ++$i) {
+                for ($i = 0; $i < $valueLength; ++$i) {
                     $c = ord($value[$i]);
 
                     if ($c < 0x20 || 0x7F === $c) {
-                        $hasControlBytes = true;
+                        $controlCharacters[] = $c;
                     }
                 }
 
-                if ($hasControlBytes) {
-                    $controlBytes = [];
+                if (isset($controlCharacters[0])) {
+                    // for ($i = 0; $i < $length; ++$i) {
+                    //     $controlCharacters[] = ord($value[$i]);
+                    // }
 
-                    for ($i = 0; $i < $length; ++$i) {
-                        $controlBytes[] = ord($value[$i]);
+                    if (!isset($controlCharacters[1])) {
+                        return $controlCharacters[0];
                     }
 
-                    if (!isset($controlBytes[1])) {
-                        return $controlBytes[0];
-                    }
-
-                    return new ExifList($controlBytes);
+                    return new ExifList($controlCharacters);
                 }
             }
 
