@@ -10,7 +10,7 @@ $exifTagReader = new OneToMany\ExifTools\Reader\ExifTagReader();
 
 $separator();
 
-// Photo with ComponentsConfiguration tag containing NUL bytes
+// Photo with ComponentsConfiguration tag containing multiple control characters
 $exifTags = $exifTagReader->read(__DIR__.'/example-ComponentsConfiguration.jpeg');
 
 if ($name = $exifTags->get('FileName')) {
@@ -42,7 +42,7 @@ if (true === ($gps = $exifTags->gps())->isValid()) {
 
 $separator();
 
-// Photo with SceneType tag containing a control character
+// Photo with SceneType tag containing a single control character
 $exifTags = $exifTagReader->read(__DIR__.'/example-SceneType.jpeg');
 
 if ($name = $exifTags->get('FileName')) {
