@@ -157,6 +157,29 @@ final readonly class ExifValue implements \Stringable
         return null;
     }
 
+    private static function hasControlBytes(string $value): bool
+    {
+        $length = strlen($value);
+
+        if (0 === $length) {
+            return false;
+        }
+
+        for ($i=0; $i<$length; $i++) {
+            $c = ord($value[$i]);
+
+            if ($c < 0x20) {
+                return true;
+            }
+
+            if ($c === 0x7F) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @param int|string|ExifValueList|ExifValueMap $value
      */
@@ -172,20 +195,20 @@ final readonly class ExifValue implements \Stringable
                 return (int) $value;
             }
 
-            // Attempt to convert NUL bytes
-            if (str_contains($value, "\x00")) {
-                $nulByteList = [];
+            // Attempt to convert control bytes
+            // to a human readable representation
+            if (self::hasControlBytes($value)) {
+                $controlBytes = [];
 
                 for ($i = 0; $i < strlen($value); ++$i) {
-                    $nulByteList[] = ord($value[$i]);
+                    $controlBytes[] = ord($value[$i]);
                 }
 
-                // Likely an integer or enum value
-                if (1 === count($nulByteList)) {
-                    return $nulByteList[0];
+                if (1 === count($controlBytes)) {
+                    return $controlBytes[0];
                 }
 
-                return new ExifList($nulByteList);
+                return new ExifList($controlBytes);
             }
 
             return trim($value);
