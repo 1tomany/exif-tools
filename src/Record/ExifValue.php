@@ -149,7 +149,7 @@ final readonly class ExifValue implements \Stringable
                     }
                 }
             }
-        } catch (\DateException) {
+        } catch (\DateException|\ValueError) {
         }
 
         return null;

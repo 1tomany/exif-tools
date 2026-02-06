@@ -2,6 +2,7 @@
 
 namespace OneToMany\ExifTools\Tests\Record;
 
+use OneToMany\ExifTools\Exception\LogicException;
 use OneToMany\ExifTools\Record\ExifValue;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -16,6 +17,39 @@ use const PHP_INT_MIN;
 #[Group('RecordTests')]
 final class ExifValueTest extends TestCase
 {
+    public function testToFloatRequiresScalar(): void
+    {
+        $this->expectException(LogicException::class);
+
+        (new ExifValue([1, 2, 3]))->toFloat();
+    }
+
+    #[DataProvider('providerToFloatValues')]
+    public function testToFloatReturnsExpected(int|string $value, ?float $expected): void
+    {
+        $this->assertSame($expected, new ExifValue($value)->toFloat());
+    }
+
+    /**
+     * @return list<array{0: int|string, 1: ?float}>
+     */
+    public static function providerToFloatValues(): array
+    {
+        return [
+            [0, 0.0],
+            [1, 1.0],
+            ['1', 1.0],
+            ['1.25', 1.25],
+            ['0010', 10.0],
+            ['10/2', 5.0],
+            ['3930/100', 39.3],
+            ['1/0', null],
+            ['0/0', null],
+            ['', null],
+            ['not-a-number', null],
+        ];
+    }
+
     public function testToTimestampRequiresIntegerOrString(): void
     {
         $exifValue = new ExifValue([1, 2, 3]);
