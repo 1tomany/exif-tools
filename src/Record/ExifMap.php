@@ -29,7 +29,7 @@ final class ExifMap implements \Countable, \IteratorAggregate, \Stringable
     private ?GpsValue $gps = null;
 
     /**
-     * @param array<int|string, int|string|ExifValueList|ExifValueMap> $values
+     * @param array<int|string, int|float|string|ExifValueList|ExifValueMap> $values
      */
     public function __construct(array $values)
     {
@@ -138,7 +138,7 @@ final class ExifMap implements \Countable, \IteratorAggregate, \Stringable
     }
 
     /**
-     * @return array<string, int|string|ExifValueList|ExifValueMap>
+     * @return array<string, int|float|string|ExifValueList|ExifValueMap>
      */
     public function toArray(): array
     {

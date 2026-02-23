@@ -7,6 +7,7 @@ use OneToMany\ExifTools\Exception\LogicException;
 use function array_is_list;
 use function ctype_digit;
 use function explode;
+use function is_float;
 use function is_int;
 use function is_numeric;
 use function is_string;
@@ -16,17 +17,17 @@ use function substr_count;
 use function trim;
 
 /**
- * @phpstan-type ExifValueList list<int|string>
- * @phpstan-type ExifValueMap array<string, int|string>
+ * @phpstan-type ExifValueList list<int|float|string>
+ * @phpstan-type ExifValueMap array<string, int|float|string>
  */
 final readonly class ExifValue implements \Stringable
 {
-    private int|string|ExifList|ExifMap $value;
+    private int|float|string|ExifList|ExifMap $value;
 
     /**
-     * @param int|string|ExifValueList|ExifValueMap $value
+     * @param int|float|string|ExifValueList|ExifValueMap $value
      */
-    public function __construct(int|string|array $value)
+    public function __construct(int|float|string|array $value)
     {
         $this->value = $this->clean($value);
     }
@@ -36,15 +37,15 @@ final readonly class ExifValue implements \Stringable
         return (string) $this->value;
     }
 
-    public function get(): int|string|ExifList|ExifMap
+    public function get(): int|float|string|ExifList|ExifMap
     {
         return $this->value;
     }
 
     /**
-     * @return int|string|ExifValueList|ExifValueMap
+     * @return int|float|string|ExifValueList|ExifValueMap
      */
-    public function value(): int|string|array
+    public function value(): int|float|string|array
     {
         if ($this->isList() || $this->isMap()) {
             return $this->value->toArray(); // @phpstan-ignore-line
@@ -61,6 +62,16 @@ final readonly class ExifValue implements \Stringable
     public function isInt(): bool
     {
         return is_int($this->value);
+    }
+
+    /**
+     * @phpstan-assert-if-true float $this->get()
+     * @phpstan-assert-if-true float $this->value()
+     * @phpstan-assert-if-true float $this->value
+     */
+    public function isFloat(): bool
+    {
+        return is_float($this->value);
     }
 
     /**
@@ -98,12 +109,16 @@ final readonly class ExifValue implements \Stringable
      * a floating point number. EXIF encodes decimals as a fraction (ex: "3930/100"),
      * so the fractional components are extracted, divided, and returned as a float.
      *
-     * @throws LogicException if the value is not an integer or string
+     * @throws LogicException if the value is not a scalar
      */
     public function toFloat(): ?float
     {
         if ($this->isList() || $this->isMap()) {
             throw new LogicException('Lists and maps cannot be converted to floating point numbers.');
+        }
+
+        if ($this->isFloat()) {
+            return $this->value;
         }
 
         if ($this->isInt()) {
@@ -156,10 +171,14 @@ final readonly class ExifValue implements \Stringable
     }
 
     /**
-     * @param int|string|ExifValueList|ExifValueMap $value
+     * @param int|float|string|ExifValueList|ExifValueMap $value
      */
-    private function clean(int|string|array $value): int|string|ExifList|ExifMap
+    private function clean(int|float|string|array $value): int|float|string|ExifList|ExifMap
     {
+        if (is_float($value)) {
+            return $value;
+        }
+
         if (is_int($value)) {
             return $value;
         }

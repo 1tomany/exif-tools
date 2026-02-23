@@ -25,13 +25,13 @@ final class ExifValueTest extends TestCase
     }
 
     #[DataProvider('providerToFloatValues')]
-    public function testToFloatReturnsExpected(int|string $value, ?float $expected): void
+    public function testToFloatReturnsExpected(int|float|string $value, ?float $expected): void
     {
-        $this->assertSame($expected, new ExifValue($value)->toFloat());
+        $this->assertSame($expected, (new ExifValue($value))->toFloat());
     }
 
     /**
-     * @return list<array{0: int|string, 1: ?float}>
+     * @return list<array{0: int|float|string, 1: ?float}>
      */
     public static function providerToFloatValues(): array
     {
@@ -47,7 +47,24 @@ final class ExifValueTest extends TestCase
             ['0/0', null],
             ['', null],
             ['not-a-number', null],
+            [39.3, 39.3],
+            [-179.5, -179.5],
         ];
+    }
+
+    public function testFloatValueIsStoredNatively(): void
+    {
+        $exifValue = new ExifValue(39.3);
+
+        $this->assertTrue($exifValue->isFloat());
+        $this->assertSame(39.3, $exifValue->value());
+    }
+
+    public function testFloatValuePreservesPrecision(): void
+    {
+        $exifValue = new ExifValue(-179.89999389648438);
+
+        $this->assertSame(-179.89999389648438, $exifValue->toFloat());
     }
 
     public function testToTimestampRequiresIntegerOrString(): void
