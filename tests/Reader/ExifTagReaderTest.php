@@ -33,7 +33,8 @@ final class ExifTagReaderTest extends TestCase
 
     public function testReadingFileRequiresImageWithExifData(): void
     {
-        $path = __DIR__.'/../.data/extract.dev-sticker.png';
+        $path = __DIR__.'/../.data/no-exif.png';
+
         $this->assertFileExists($path);
         $this->assertFileIsReadable($path);
 
@@ -41,5 +42,18 @@ final class ExifTagReaderTest extends TestCase
         $this->expectExceptionMessage('Reading the EXIF data from the file "'.$path.'" failed.');
 
         new ExifTagReader()->read($path);
+    }
+
+    public function testReadingSafelySuppressesExceptions(): void
+    {
+        $path = __DIR__.'/../.data/no-exif.png';
+
+        $this->assertFileExists($path);
+        $this->assertFileIsReadable($path);
+
+        $exifTags = new ExifTagReader()->readSafely($path);
+
+        $this->assertCount(0, $exifTags);
+        $this->assertEmpty($exifTags->all());
     }
 }
