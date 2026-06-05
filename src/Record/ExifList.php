@@ -73,7 +73,7 @@ final readonly class ExifList implements \Countable, \IteratorAggregate, \String
     }
 
     /**
-     * @return list<int|string|ExifValueList|ExifValueMap>
+     * @return list<int|float|string|ExifValueList|ExifValueMap>
      */
     public function toArray(): array
     {
