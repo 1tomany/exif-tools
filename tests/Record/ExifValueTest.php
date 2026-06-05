@@ -238,7 +238,7 @@ final class ExifValueTest extends TestCase
         new ExifValue([1, 2, 3])->toFloat();
     }
 
-    #[DataProvider('providerToFloatValues')]
+    #[DataProvider('providerToFloatValue')]
     public function testToFloat(
         int|float|string $value,
         ?float $expected,
@@ -249,7 +249,7 @@ final class ExifValueTest extends TestCase
     /**
      * @return list<array{0: int|float|string, 1: ?float}>
      */
-    public static function providerToFloatValues(): array
+    public static function providerToFloatValue(): array
     {
         return [
             [0, 0.0],
@@ -298,7 +298,7 @@ final class ExifValueTest extends TestCase
     }
 
     /**
-     * @return list<list<int>>
+     * @return non-empty-list<non-empty-list<int>>
      */
     public static function providerIntegerTimestamp(): array
     {

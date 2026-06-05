@@ -2,11 +2,13 @@
 
 namespace OneToMany\ExifTools\Reader;
 
+use OneToMany\ExifTools\Contract\Exception\ExceptionInterface as ExifToolsExceptionInterface;
 use OneToMany\ExifTools\Contract\Reader\ExifReaderInterface;
 use OneToMany\ExifTools\Contract\Reader\ExifTagReaderInterface;
 use OneToMany\ExifTools\Exception\InvalidArgumentException;
 use OneToMany\ExifTools\Record\ExifMap;
 use OneToMany\ExifTools\Record\ExifValue;
+use Override;
 
 use function is_file;
 use function is_readable;
@@ -25,6 +27,10 @@ class ExifTagReader implements ExifTagReaderInterface
 
     /**
      * @see OneToMany\ExifTools\Contract\Reader\ExifTagReaderInterface
+     *
+     * @throws InvalidArgumentException when the file is not readable
+     * @throws InvalidArgumentException when the file is not a valid image
+     * @throws InvalidArgumentException when reading the EXIF data fails
      */
     public function read(string $path): ExifMap
     {
@@ -46,5 +52,18 @@ class ExifTagReader implements ExifTagReaderInterface
         }
 
         return new ExifMap($exifTags);
+    }
+
+    /**
+     * @see OneToMany\ExifTools\Contract\Reader\ExifTagReaderInterface
+     */
+    public function readSafely(string $path): ExifMap
+    {
+        try {
+            return $this->read($path);
+        } catch (ExifToolsExceptionInterface) {
+        }
+
+        return new ExifMap([]);
     }
 }
