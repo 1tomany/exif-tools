@@ -6,4 +6,5 @@ parameters:
         - ./src/
         - ./tests/
 
+    tmpDir: ./.build/phpstan.cache
     treatPhpDocTypesAsCertain: false
