@@ -118,6 +118,9 @@ final class ExifValueTest extends TestCase
         $this->assertFalse(new ExifValue($value)->isList());
     }
 
+    /**
+     * @param ExifValueList $value
+     */
     #[DataProvider('providerListValue')]
     public function testIsList(array $value): void
     {
@@ -127,6 +130,27 @@ final class ExifValueTest extends TestCase
     public function testMultipleControlBytesAreList(): void
     {
         $this->assertTrue(new ExifValue("\n\t\n")->isList());
+    }
+
+        /**
+     * @param int|float|string|ExifValueList $value
+     */
+    #[DataProvider('providerIntValue')]
+    #[DataProvider('providerFloatValue')]
+    #[DataProvider('providerStringValue')]
+    #[DataProvider('providerListValue')]
+    public function testIsNotMap(int|float|string|array $value): void
+    {
+        $this->assertFalse(new ExifValue($value)->isMap());
+    }
+
+    /**
+     * @param ExifValueMap $value
+     */
+    #[DataProvider('providerMapValue')]
+    public function testIsMap(array $value): void
+    {
+        $this->assertTrue(new ExifValue($value)->isMap());
     }
 
     /**
