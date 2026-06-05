@@ -29,9 +29,13 @@ use const PHP_INT_MIN;
 #[Group('RecordTests')]
 final class ExifValueTest extends TestCase
 {
+    /**
+     * @param float|string|ExifValueList|ExifValueMap $value
+     */
     #[DataProvider('providerFloatValue')]
     #[DataProvider('providerStringValue')]
     #[DataProvider('providerListValue')]
+    #[DataProvider('providerMapValue')]
     public function testIsNotInt(float|string|array $value): void
     {
         $this->assertFalse(new ExifValue($value)->isInt());
@@ -106,6 +110,21 @@ final class ExifValueTest extends TestCase
             [['']],
             [['a']],
             [['A']],
+        ];
+
+        return $provider;
+    }
+
+    /**
+     * @return non-empty-list<non-empty-list<ExifValueMap>>
+     */
+    public static function providerMapValue(): array
+    {
+        $provider = [
+            [[]],
+            [['lat' => 1.0]],
+            [['lng' => 1.0]],
+            [['fStop' => 15, 'focalLength' => 45.6]],
         ];
 
         return $provider;
