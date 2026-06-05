@@ -15,6 +15,7 @@ use function time;
 
 use const M_PI;
 use const PHP_BINARY;
+use const PHP_EOL;
 use const PHP_FLOAT_EPSILON;
 use const PHP_FLOAT_MAX;
 use const PHP_FLOAT_MIN;
@@ -31,7 +32,8 @@ final class ExifValueTest extends TestCase
 {
     #[DataProvider('providerFloatValue')]
     #[DataProvider('providerStringValue')]
-    public function testIsNotInt(float|string $value): void
+    #[DataProvider('providerListValue')]
+    public function testIsNotInt(float|string|array $value): void
     {
         $this->assertFalse(new ExifValue($value)->isInt());
     }
@@ -40,6 +42,11 @@ final class ExifValueTest extends TestCase
     public function testIsInt(int $value): void
     {
         $this->assertTrue(new ExifValue($value)->isInt());
+    }
+
+    public function testSingleControlByteIsInt(): void
+    {
+        $this->assertTrue(new ExifValue("\n")->isInt());
     }
 
     /**
@@ -80,8 +87,26 @@ final class ExifValueTest extends TestCase
             [''],
             ['a'],
             ['A'],
-            [bin2hex(random_bytes(4))],
             [PHP_BINARY],
+            [bin2hex(random_bytes(4))],
+        ];
+
+        return $provider;
+    }
+
+    /**
+     * @return non-empty-list<non-empty-list<ExifValueList>>
+     */
+    public static function providerListValue(): array
+    {
+        $provider = [
+            [[]],
+            [[1]],
+            [[1, 2]],
+            [[1.0, 2.0]],
+            [['']],
+            [['a']],
+            [['A']],
         ];
 
         return $provider;
