@@ -8,10 +8,13 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
+use function bin2hex;
+use function random_bytes;
 use function random_int;
 use function time;
 
 use const M_PI;
+use const PHP_BINARY;
 use const PHP_FLOAT_EPSILON;
 use const PHP_FLOAT_MAX;
 use const PHP_FLOAT_MIN;
@@ -77,8 +80,8 @@ final class ExifValueTest extends TestCase
             [''],
             ['a'],
             ['A'],
-            [\bin2hex(\random_bytes(4))],
-            [\PHP_BINARY]
+            [bin2hex(random_bytes(4))],
+            [PHP_BINARY],
         ];
 
         return $provider;
