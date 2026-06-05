@@ -132,7 +132,7 @@ final class ExifValueTest extends TestCase
         $this->assertTrue(new ExifValue("\n\t\n")->isList());
     }
 
-        /**
+    /**
      * @param int|float|string|ExifValueList $value
      */
     #[DataProvider('providerIntValue')]
