@@ -8,32 +8,248 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
+use function bin2hex;
+use function random_bytes;
+use function random_int;
 use function time;
 
+use const M_PI;
+use const PHP_BINARY;
+use const PHP_FLOAT_EPSILON;
+use const PHP_FLOAT_MAX;
+use const PHP_FLOAT_MIN;
 use const PHP_INT_MAX;
 use const PHP_INT_MIN;
 
+/**
+ * @phpstan-import-type ExifValueList from ExifValue
+ * @phpstan-import-type ExifValueMap from ExifValue
+ */
 #[Group('UnitTests')]
 #[Group('RecordTests')]
 final class ExifValueTest extends TestCase
 {
+    /**
+     * @param float|string|ExifValueList|ExifValueMap $value
+     */
+    #[DataProvider('providerFloatValue')]
+    #[DataProvider('providerStringValue')]
+    #[DataProvider('providerListValue')]
+    #[DataProvider('providerMapValue')]
+    public function testIsNotInt(float|string|array $value): void
+    {
+        $this->assertFalse(new ExifValue($value)->isInt());
+    }
+
+    #[DataProvider('providerIntValue')]
+    public function testIsInt(int $value): void
+    {
+        $this->assertTrue(new ExifValue($value)->isInt());
+    }
+
+    public function testSingleControlByteIsInt(): void
+    {
+        $this->assertTrue(new ExifValue("\n")->isInt());
+    }
+
+    /**
+     * @param int|string|ExifValueList|ExifValueMap $value
+     */
+    #[DataProvider('providerIntValue')]
+    #[DataProvider('providerStringValue')]
+    #[DataProvider('providerListValue')]
+    #[DataProvider('providerMapValue')]
+    public function testIsNotFloat(int|string|array $value): void
+    {
+        $this->assertFalse(new ExifValue($value)->isFloat());
+    }
+
+    #[DataProvider('providerFloatValue')]
+    public function testIsFloat(float $value): void
+    {
+        $this->assertTrue(new ExifValue($value)->isFloat());
+    }
+
+    /**
+     * @param int|float|ExifValueList|ExifValueMap $value
+     */
+    #[DataProvider('providerIntValue')]
+    #[DataProvider('providerFloatValue')]
+    #[DataProvider('providerListValue')]
+    #[DataProvider('providerMapValue')]
+    public function testIsNotString(int|float|array $value): void
+    {
+        $this->assertFalse(new ExifValue($value)->isString());
+    }
+
+    #[DataProvider('providerStringValue')]
+    public function testIsString(string $value): void
+    {
+        $this->assertTrue(new ExifValue($value)->isString());
+    }
+
+    /**
+     * @param ExifValueList|ExifValueMap $value
+     */
+    #[DataProvider('providerListValue')]
+    #[DataProvider('providerMapValue')]
+    public function testIsNotScalar(array $value): void
+    {
+        $this->assertFalse(new ExifValue($value)->isScalar());
+    }
+
+    #[DataProvider('providerIntValue')]
+    #[DataProvider('providerFloatValue')]
+    #[DataProvider('providerStringValue')]
+    public function testIsScalar(int|float|string $value): void
+    {
+        $this->assertTrue(new ExifValue($value)->isScalar());
+    }
+
+    /**
+     * @param int|float|string|ExifValueMap $value
+     */
+    #[DataProvider('providerIntValue')]
+    #[DataProvider('providerFloatValue')]
+    #[DataProvider('providerStringValue')]
+    #[DataProvider('providerMapValue')]
+    public function testIsNotList(int|float|string|array $value): void
+    {
+        $this->assertFalse(new ExifValue($value)->isList());
+    }
+
+    /**
+     * @param ExifValueList $value
+     */
+    #[DataProvider('providerListValue')]
+    public function testIsList(array $value): void
+    {
+        $this->assertTrue(new ExifValue($value)->isList());
+    }
+
+    public function testMultipleControlBytesAreList(): void
+    {
+        $this->assertTrue(new ExifValue("\n\t\n")->isList());
+    }
+
+    /**
+     * @param int|float|string|ExifValueList $value
+     */
+    #[DataProvider('providerIntValue')]
+    #[DataProvider('providerFloatValue')]
+    #[DataProvider('providerStringValue')]
+    #[DataProvider('providerListValue')]
+    public function testIsNotMap(int|float|string|array $value): void
+    {
+        $this->assertFalse(new ExifValue($value)->isMap());
+    }
+
+    /**
+     * @param ExifValueMap $value
+     */
+    #[DataProvider('providerMapValue')]
+    public function testIsMap(array $value): void
+    {
+        $this->assertTrue(new ExifValue($value)->isMap());
+    }
+
+    /**
+     * @return non-empty-list<non-empty-list<int>>
+     */
+    public static function providerIntValue(): array
+    {
+        $provider = [
+            [PHP_INT_MIN],
+            [PHP_INT_MAX],
+            [random_int(PHP_INT_MIN, PHP_INT_MAX)],
+        ];
+
+        return $provider;
+    }
+
+    /**
+     * @return non-empty-list<non-empty-list<float>>
+     */
+    public static function providerFloatValue(): array
+    {
+        $provider = [
+            [M_PI],
+            [PHP_FLOAT_MIN],
+            [PHP_FLOAT_MAX],
+            [PHP_FLOAT_EPSILON],
+        ];
+
+        return $provider;
+    }
+
+    /**
+     * @return non-empty-list<non-empty-list<string>>
+     */
+    public static function providerStringValue(): array
+    {
+        $provider = [
+            [''],
+            ['a'],
+            ['A'],
+            [PHP_BINARY],
+            [bin2hex(random_bytes(4))],
+        ];
+
+        return $provider;
+    }
+
+    /**
+     * @return non-empty-list<non-empty-list<ExifValueList>>
+     */
+    public static function providerListValue(): array
+    {
+        $provider = [
+            [[]],
+            [[1]],
+            [[1, 2]],
+            [[1.0, 2.0]],
+            [['']],
+            [['a']],
+            [['A']],
+        ];
+
+        return $provider;
+    }
+
+    /**
+     * @return non-empty-list<non-empty-list<ExifValueMap>>
+     */
+    public static function providerMapValue(): array
+    {
+        $provider = [
+            [['lat' => 1.0]],
+            [['lng' => 1.0]],
+            [['fStop' => 15, 'focalLength' => 45.6]],
+        ];
+
+        return $provider;
+    }
+
     public function testToFloatRequiresScalar(): void
     {
         $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Non-scalar values cannot be converted to floats.');
 
-        (new ExifValue([1, 2, 3]))->toFloat();
+        new ExifValue([1, 2, 3])->toFloat();
     }
 
-    #[DataProvider('providerToFloatValues')]
-    public function testToFloatReturnsExpected(int|float|string $value, ?float $expected): void
-    {
-        $this->assertSame($expected, (new ExifValue($value))->toFloat());
+    #[DataProvider('providerToFloatValue')]
+    public function testToFloat(
+        int|float|string $value,
+        ?float $expected,
+    ): void {
+        $this->assertSame($expected, new ExifValue($value)->toFloat());
     }
 
     /**
      * @return list<array{0: int|float|string, 1: ?float}>
      */
-    public static function providerToFloatValues(): array
+    public static function providerToFloatValue(): array
     {
         return [
             [0, 0.0],
@@ -82,7 +298,7 @@ final class ExifValueTest extends TestCase
     }
 
     /**
-     * @return list<list<int>>
+     * @return non-empty-list<non-empty-list<int>>
      */
     public static function providerIntegerTimestamp(): array
     {

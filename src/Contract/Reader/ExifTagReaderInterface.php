@@ -2,15 +2,21 @@
 
 namespace OneToMany\ExifTools\Contract\Reader;
 
-use OneToMany\ExifTools\Exception\InvalidArgumentException;
 use OneToMany\ExifTools\Record\ExifMap;
 
 interface ExifTagReaderInterface
 {
     /**
-     * @param non-empty-string $path
+     * Reads EXIF data from an image and converts it to a map for easy access.
      *
-     * @throws InvalidArgumentException
+     * @param non-empty-string $path
      */
     public function read(string $path): ExifMap;
+
+    /**
+     * Reads EXIF data from an image without throwing any exceptions.
+     *
+     * @param non-empty-string $path
+     */
+    public function readSafely(string $path): ExifMap;
 }
