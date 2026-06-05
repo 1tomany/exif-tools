@@ -124,6 +124,11 @@ final class ExifValueTest extends TestCase
         $this->assertTrue(new ExifValue($value)->isList());
     }
 
+    public function testMultipleControlBytesAreList(): void
+    {
+        $this->assertTrue(new ExifValue("\n\t\n")->isList());
+    }
+
     /**
      * @return non-empty-list<non-empty-list<int>>
      */
