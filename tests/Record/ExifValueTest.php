@@ -13,19 +13,68 @@ use function time;
 use const PHP_INT_MAX;
 use const PHP_INT_MIN;
 
+/**
+ * @phpstan-import-type ExifValueList from ExifValue
+ * @phpstan-import-type ExifValueMap from ExifValue
+ */
 #[Group('UnitTests')]
 #[Group('RecordTests')]
 final class ExifValueTest extends TestCase
 {
+    #[DataProvider('providerFloatValue')]
+    public function testIsNotInt(float|string $value): void
+    {
+        $this->assertFalse(new ExifValue($value)->isInt());
+    }
+
+    #[DataProvider('providerIntValue')]
+    public function testIsInt(int $value): void
+    {
+        $this->assertTrue(new ExifValue($value)->isInt());
+    }
+
+    /**
+     * @return non-empty-list<non-empty-list<int>>
+     */
+    public static function providerIntValue(): array
+    {
+        $provider = [
+            [\PHP_INT_MIN],
+            [\PHP_INT_MAX],
+            [\random_int(\PHP_INT_MIN, \PHP_INT_MAX)],
+        ];
+
+        return $provider;
+    }
+
+    /**
+     * @return non-empty-list<non-empty-list<float>>
+     */
+    public static function providerFloatValue(): array
+    {
+        $provider = [
+            [\M_PI],
+            [\PHP_FLOAT_MIN],
+            [\PHP_FLOAT_MAX],
+            [\PHP_FLOAT_EPSILON],
+        ];
+
+        return $provider;
+    }
+
     public function testToFloatRequiresScalar(): void
     {
         $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Non-scalar values cannot be converted to floats.');
 
         (new ExifValue([1, 2, 3]))->toFloat();
     }
 
     #[DataProvider('providerToFloatValues')]
-    public function testToFloatReturnsExpected(int|float|string $value, ?float $expected): void
+    public function testToFloatReturnsExpected(
+        int|float|string $value,
+        ?float $expected,
+    ): void
     {
         $this->assertSame($expected, (new ExifValue($value))->toFloat());
     }

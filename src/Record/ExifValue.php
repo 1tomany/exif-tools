@@ -65,9 +65,9 @@ final readonly class ExifValue implements \Stringable
     }
 
     /**
+     * @phpstan-assert-if-true float $this->value
      * @phpstan-assert-if-true float $this->get()
      * @phpstan-assert-if-true float $this->value()
-     * @phpstan-assert-if-true float $this->value
      */
     public function isFloat(): bool
     {
@@ -75,9 +75,9 @@ final readonly class ExifValue implements \Stringable
     }
 
     /**
+     * @phpstan-assert-if-true string $this->value
      * @phpstan-assert-if-true string $this->get()
      * @phpstan-assert-if-true string $this->value()
-     * @phpstan-assert-if-true string $this->value
      */
     public function isString(): bool
     {
@@ -85,9 +85,19 @@ final readonly class ExifValue implements \Stringable
     }
 
     /**
+     * @phpstan-assert-if-true int|float|string $this->value
+     * @phpstan-assert-if-true int|float|string $this->get()
+     * @phpstan-assert-if-true int|float|string $this->value()
+     */
+    public function isScalar(): bool
+    {
+        return $this->isInt() || $this->isFloat() || $this->isString();
+    }
+
+    /**
+     * @phpstan-assert-if-true ExifList $this->value
      * @phpstan-assert-if-true ExifList $this->get()
      * @phpstan-assert-if-true ExifValueList $this->value()
-     * @phpstan-assert-if-true ExifList $this->value
      */
     public function isList(): bool
     {
@@ -95,9 +105,9 @@ final readonly class ExifValue implements \Stringable
     }
 
     /**
+     * @phpstan-assert-if-true ExifMap $this->value
      * @phpstan-assert-if-true ExifMap $this->get()
      * @phpstan-assert-if-true ExifValueMap $this->value()
-     * @phpstan-assert-if-true ExifMap $this->value
      */
     public function isMap(): bool
     {
@@ -109,12 +119,12 @@ final readonly class ExifValue implements \Stringable
      * a floating point number. EXIF encodes decimals as a fraction (ex: "3930/100"),
      * so the fractional components are extracted, divided, and returned as a float.
      *
-     * @throws LogicException if the value is not a scalar
+     * @throws LogicException when the value is not a scalar
      */
     public function toFloat(): ?float
     {
-        if ($this->isList() || $this->isMap()) {
-            throw new LogicException('Lists and maps cannot be converted to floating point numbers.');
+        if (!$this->isScalar()) {
+            throw new LogicException('Non-scalar values cannot be converted to floats.');
         }
 
         if ($this->isFloat()) {
