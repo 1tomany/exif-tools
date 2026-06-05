@@ -53,7 +53,7 @@ final class ExifValueTest extends TestCase
     }
 
     /**
-     * @param float|string|ExifValueList|ExifValueMap $value
+     * @param int|string|ExifValueList|ExifValueMap $value
      */
     #[DataProvider('providerIntValue')]
     #[DataProvider('providerStringValue')]
