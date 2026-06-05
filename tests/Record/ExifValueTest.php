@@ -89,6 +89,42 @@ final class ExifValueTest extends TestCase
     }
 
     /**
+     * @param ExifValueList|ExifValueMap $value
+     */
+    #[DataProvider('providerListValue')]
+    #[DataProvider('providerMapValue')]
+    public function testIsNotScalar(array $value): void
+    {
+        $this->assertFalse(new ExifValue($value)->isScalar());
+    }
+
+    #[DataProvider('providerIntValue')]
+    #[DataProvider('providerFloatValue')]
+    #[DataProvider('providerStringValue')]
+    public function testIsScalar(int|float|string $value): void
+    {
+        $this->assertTrue(new ExifValue($value)->isScalar());
+    }
+
+    /**
+     * @param int|float|string|ExifValueMap $value
+     */
+    #[DataProvider('providerIntValue')]
+    #[DataProvider('providerFloatValue')]
+    #[DataProvider('providerStringValue')]
+    #[DataProvider('providerMapValue')]
+    public function testIsNotList(int|float|string|array $value): void
+    {
+        $this->assertFalse(new ExifValue($value)->isList());
+    }
+
+    #[DataProvider('providerListValue')]
+    public function testIsList(array $value): void
+    {
+        $this->assertTrue(new ExifValue($value)->isList());
+    }
+
+    /**
      * @return non-empty-list<non-empty-list<int>>
      */
     public static function providerIntValue(): array
@@ -157,7 +193,6 @@ final class ExifValueTest extends TestCase
     public static function providerMapValue(): array
     {
         $provider = [
-            [[]],
             [['lat' => 1.0]],
             [['lng' => 1.0]],
             [['fStop' => 15, 'focalLength' => 45.6]],
