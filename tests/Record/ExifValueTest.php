@@ -8,8 +8,13 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
+use function random_int;
 use function time;
 
+use const M_PI;
+use const PHP_FLOAT_EPSILON;
+use const PHP_FLOAT_MAX;
+use const PHP_FLOAT_MIN;
 use const PHP_INT_MAX;
 use const PHP_INT_MIN;
 
@@ -22,6 +27,7 @@ use const PHP_INT_MIN;
 final class ExifValueTest extends TestCase
 {
     #[DataProvider('providerFloatValue')]
+    #[DataProvider('providerStringValue')]
     public function testIsNotInt(float|string $value): void
     {
         $this->assertFalse(new ExifValue($value)->isInt());
@@ -39,9 +45,9 @@ final class ExifValueTest extends TestCase
     public static function providerIntValue(): array
     {
         $provider = [
-            [\PHP_INT_MIN],
-            [\PHP_INT_MAX],
-            [\random_int(\PHP_INT_MIN, \PHP_INT_MAX)],
+            [PHP_INT_MIN],
+            [PHP_INT_MAX],
+            [random_int(PHP_INT_MIN, PHP_INT_MAX)],
         ];
 
         return $provider;
@@ -53,10 +59,26 @@ final class ExifValueTest extends TestCase
     public static function providerFloatValue(): array
     {
         $provider = [
-            [\M_PI],
-            [\PHP_FLOAT_MIN],
-            [\PHP_FLOAT_MAX],
-            [\PHP_FLOAT_EPSILON],
+            [M_PI],
+            [PHP_FLOAT_MIN],
+            [PHP_FLOAT_MAX],
+            [PHP_FLOAT_EPSILON],
+        ];
+
+        return $provider;
+    }
+
+    /**
+     * @return non-empty-list<non-empty-list<string>>
+     */
+    public static function providerStringValue(): array
+    {
+        $provider = [
+            [''],
+            ['a'],
+            ['A'],
+            [\bin2hex(\random_bytes(4))],
+            [\PHP_BINARY]
         ];
 
         return $provider;
@@ -74,8 +96,7 @@ final class ExifValueTest extends TestCase
     public function testToFloatReturnsExpected(
         int|float|string $value,
         ?float $expected,
-    ): void
-    {
+    ): void {
         $this->assertSame($expected, (new ExifValue($value))->toFloat());
     }
 
