@@ -15,7 +15,6 @@ use function time;
 
 use const M_PI;
 use const PHP_BINARY;
-use const PHP_EOL;
 use const PHP_FLOAT_EPSILON;
 use const PHP_FLOAT_MAX;
 use const PHP_FLOAT_MIN;
