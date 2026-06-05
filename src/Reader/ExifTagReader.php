@@ -8,7 +8,6 @@ use OneToMany\ExifTools\Contract\Reader\ExifTagReaderInterface;
 use OneToMany\ExifTools\Exception\InvalidArgumentException;
 use OneToMany\ExifTools\Record\ExifMap;
 use OneToMany\ExifTools\Record\ExifValue;
-use Override;
 
 use function is_file;
 use function is_readable;
