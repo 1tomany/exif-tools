@@ -53,6 +53,42 @@ final class ExifValueTest extends TestCase
     }
 
     /**
+     * @param float|string|ExifValueList|ExifValueMap $value
+     */
+    #[DataProvider('providerIntValue')]
+    #[DataProvider('providerStringValue')]
+    #[DataProvider('providerListValue')]
+    #[DataProvider('providerMapValue')]
+    public function testIsNotFloat(int|string|array $value): void
+    {
+        $this->assertFalse(new ExifValue($value)->isFloat());
+    }
+
+    #[DataProvider('providerFloatValue')]
+    public function testIsFloat(float $value): void
+    {
+        $this->assertTrue(new ExifValue($value)->isFloat());
+    }
+
+    /**
+     * @param int|float|ExifValueList|ExifValueMap $value
+     */
+    #[DataProvider('providerIntValue')]
+    #[DataProvider('providerFloatValue')]
+    #[DataProvider('providerListValue')]
+    #[DataProvider('providerMapValue')]
+    public function testIsNotString(int|float|array $value): void
+    {
+        $this->assertFalse(new ExifValue($value)->isString());
+    }
+
+    #[DataProvider('providerStringValue')]
+    public function testIsString(string $value): void
+    {
+        $this->assertTrue(new ExifValue($value)->isString());
+    }
+
+    /**
      * @return non-empty-list<non-empty-list<int>>
      */
     public static function providerIntValue(): array
