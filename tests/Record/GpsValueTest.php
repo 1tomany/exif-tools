@@ -51,8 +51,14 @@ final class GpsValueTest extends TestCase
 
     public function testAllReturnsCoordinatePair(): void
     {
-        $latitude = \random_int();
-        $gps = new GpsValue();
+        $latitude = random_int(-90, 90);
+        $longitude = random_int(-180, 180);
+
+        $coordinates = new GpsValue($latitude, $longitude)->all();
+
+        $this->assertCount(2, $coordinates);
+        $this->assertSame(GpsValue::toDecimal($latitude, 8), $coordinates[0]);
+        $this->assertSame(GpsValue::toDecimal($longitude, 8), $coordinates[1]);
     }
 
     public function testIsNotValidWithNullLatitude(): void
