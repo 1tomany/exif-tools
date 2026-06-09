@@ -27,11 +27,11 @@ final readonly class GpsValue
         public ?float $altitude = null,
     ) {
         if (null !== $latitude && ($latitude < -90.0 || $latitude > 90.0)) {
-            throw new InvalidArgumentException(sprintf('The latitude "%s" must be between -90 and +90.', self::toDecimal($latitude, 6)));
+            throw new InvalidArgumentException(sprintf('The latitude "%s" must be between -90 and +90.', self::toDecimal($latitude, 8)));
         }
 
         if (null !== $longitude && ($longitude < -180.0 || $longitude > 180.0)) {
-            throw new InvalidArgumentException(sprintf('The longitude "%s" must be between -180 and +180.', self::toDecimal($longitude, 6)));
+            throw new InvalidArgumentException(sprintf('The longitude "%s" must be between -180 and +180.', self::toDecimal($longitude, 8)));
         }
 
         if (null !== $altitude && $altitude < self::MARIANA_TRENCH_DEPTH) {
