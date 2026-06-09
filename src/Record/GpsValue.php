@@ -22,16 +22,16 @@ final readonly class GpsValue
      * @throws InvalidArgumentException if $altitude is not null and less than -10984 (lowest point on Earth)
      */
     public function __construct(
-        public ?float $latitude = null,
-        public ?float $longitude = null,
-        public ?float $altitude = null,
+        public int|float|null $latitude = null,
+        public int|float|null $longitude = null,
+        public int|float|null $altitude = null,
     ) {
         if (null !== $latitude && ($latitude < -90.0 || $latitude > 90.0)) {
-            throw new InvalidArgumentException(sprintf('The latitude "%s" must be between -90 and +90.', self::toDecimal($latitude, 6)));
+            throw new InvalidArgumentException(sprintf('The latitude "%s" must be between -90 and +90.', self::toDecimal($latitude, 8)));
         }
 
         if (null !== $longitude && ($longitude < -180.0 || $longitude > 180.0)) {
-            throw new InvalidArgumentException(sprintf('The longitude "%s" must be between -180 and +180.', self::toDecimal($longitude, 6)));
+            throw new InvalidArgumentException(sprintf('The longitude "%s" must be between -180 and +180.', self::toDecimal($longitude, 8)));
         }
 
         if (null !== $altitude && $altitude < self::MARIANA_TRENCH_DEPTH) {
@@ -91,7 +91,10 @@ final readonly class GpsValue
         return new self($latitude, $longitude, $altitude);
     }
 
-    public static function toDecimal(?float $number, int $scale): ?string
+    /**
+     * @return ?numeric-string
+     */
+    public static function toDecimal(int|float|string|null $number, int $scale): ?string
     {
         if (null === $number) {
             return null;
@@ -100,12 +103,29 @@ final readonly class GpsValue
         return bcdiv(number_format(round((float) $number, $scale), $scale, '.', ''), '1', $scale);
     }
 
+    /**
+     * @return array{
+     *   0: ?numeric-string,
+     *   1: ?numeric-string,
+     * }
+     */
+    public function all(): array
+    {
+        return [
+            $this->getLatitudeDecimal(),
+            $this->getLongitudeDecimal(),
+        ];
+    }
+
     public function getLatitude(): ?float
     {
         return $this->latitude;
     }
 
-    public function getLatitudeDecimal(int $scale = 6): ?string
+    /**
+     * @return ?numeric-string
+     */
+    public function getLatitudeDecimal(int $scale = 8): ?string
     {
         return self::toDecimal($this->latitude, $scale);
     }
@@ -115,7 +135,10 @@ final readonly class GpsValue
         return $this->longitude;
     }
 
-    public function getLongitudeDecimal(int $scale = 6): ?string
+    /**
+     * @return ?numeric-string
+     */
+    public function getLongitudeDecimal(int $scale = 8): ?string
     {
         return self::toDecimal($this->longitude, $scale);
     }

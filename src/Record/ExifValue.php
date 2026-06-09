@@ -5,7 +5,6 @@ namespace OneToMany\ExifTools\Record;
 use OneToMany\ExifTools\Exception\LogicException;
 
 use function array_is_list;
-use function ctype_digit;
 use function explode;
 use function is_float;
 use function is_int;
@@ -194,11 +193,6 @@ final readonly class ExifValue implements \Stringable
         }
 
         if (is_string($value)) {
-            // Convert integer strings
-            if (ctype_digit($value)) {
-                return (int) $value;
-            }
-
             // Convert control bytes to integers
             if ($valueLength = strlen($value)) {
                 $controlCharacters = [];
