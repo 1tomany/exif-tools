@@ -125,7 +125,7 @@ final readonly class GpsValue
     /**
      * @return ?numeric-string
      */
-    public function getLatitudeDecimal(int $scale = 6): ?string
+    public function getLatitudeDecimal(int $scale = 8): ?string
     {
         return self::toDecimal($this->latitude, $scale);
     }
@@ -138,7 +138,7 @@ final readonly class GpsValue
     /**
      * @return ?numeric-string
      */
-    public function getLongitudeDecimal(int $scale = 6): ?string
+    public function getLongitudeDecimal(int $scale = 8): ?string
     {
         return self::toDecimal($this->longitude, $scale);
     }
