@@ -22,9 +22,9 @@ final readonly class GpsValue
      * @throws InvalidArgumentException if $altitude is not null and less than -10984 (lowest point on Earth)
      */
     public function __construct(
-        public ?float $latitude = null,
-        public ?float $longitude = null,
-        public ?float $altitude = null,
+        public int|float|null $latitude = null,
+        public int|float|null $longitude = null,
+        public int|float|null $altitude = null,
     ) {
         if (null !== $latitude && ($latitude < -90.0 || $latitude > 90.0)) {
             throw new InvalidArgumentException(sprintf('The latitude "%s" must be between -90 and +90.', self::toDecimal($latitude, 8)));

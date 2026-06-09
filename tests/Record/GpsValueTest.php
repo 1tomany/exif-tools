@@ -49,6 +49,12 @@ final class GpsValueTest extends TestCase
         new GpsValue(null, null, $altitude);
     }
 
+    public function testAllReturnsCoordinatePair(): void
+    {
+        $latitude = \random_int();
+        $gps = new GpsValue();
+    }
+
     public function testIsNotValidWithNullLatitude(): void
     {
         $gps = new GpsValue(null, random_int(-180, 180));
