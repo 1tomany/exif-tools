@@ -156,7 +156,10 @@ final readonly class GpsValue
     /**
      * @phpstan-assert-if-true float $this->latitude
      * @phpstan-assert-if-true float $this->getLatitude()
+     * @phpstan-assert-if-true numeric-string $this->getLatitudeDecimal()
      * @phpstan-assert-if-true float $this->longitude
+     * @phpstan-assert-if-true float $this->getLongitude()
+     * @phpstan-assert-if-true numeric-string $this->getLongitudeDecimal()
      */
     public function isValid(): bool
     {
