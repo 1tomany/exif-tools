@@ -5,8 +5,6 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 use OneToMany\ExifTools\Reader\ExifTagReader;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\SingleCommandApplication;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
