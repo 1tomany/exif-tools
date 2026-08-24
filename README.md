@@ -35,19 +35,20 @@ Behind the scenes, each EXIF tag value is an object of type `ExifValue`. The `Ex
 
 ### Timestamps
 
-`ExifMap` objects have a method named `capturedAt()` that attempts to create a `\DateTimeImmutable` object that best represents when the photo was taken. In order, it analyzes the following tags: `DateTimeOriginal`, `DateTimeDigitized`, and `DateTime`. The first tag that creates a valid `\DateTimeImmutable` object is returned as the captured date.
+`ExifMap` objects have a method named `getCapturedAt()` that attempts to create a `\DateTimeImmutable` object that best represents when the photo was taken. In order, it analyzes the following tags: `DateTimeOriginal`, `DateTimeDigitized`, and `DateTime`. The first tag that creates a valid `\DateTimeImmutable` object is returned as the captured date.
 
 Additionally, `ExifMap` objects have a method named `getTimestamp(string $tag)` that will attempt to convert any tag to a `\DateTimeImmutable` object. Only integer and string `ExifValue` objects are considered - lists and maps will always return `null`.
 
 ### GPS Coordinates
 
-`ExifMap` objects have a method named `gps()` that will attempt to read the `GPSLatitude`, `GPSLatitudeRef`, `GPSLongitude`, `GPSLongitudeRef`, `GPSAltitude`, and `GPSAltitudeRef` tags and convert them to their floating point equivalents. The `gps()` method returns an object of type `GpsValue`. The `GpsValue` object has three properties:
+`ExifMap` objects have a method named `gps()` that will attempt to read the `GPSLatitude`, `GPSLatitudeRef`, `GPSLongitude`, `GPSLongitudeRef`, `GPSAltitude`, and `GPSAltitudeRef`, `GPSDateStamp`, and `GPSTimeStamp`, tags and convert them to their floating point or `\DateTimeImmutable` equivalents. The `gps()` method returns an object of type `GpsValue`. The `GpsValue` object has four properties:
 
 - `?float $latitude`
 - `?float $longitude`
 - `?float $altitude`
+- `?\DateTimeImmutable $capturedAt`
 
-These properties will be a non-null floating point number if the value was found in the EXIF tag. A positive `$altitude` represents the altitude in meters above sealevel, and a negative `$altitude` represents the same below sealevel.
+The `latitude`, `longitude`, and `altitude` properties will be a non-null floating point number if the value was found in the EXIF tag. A positive `altitude` represents the altitude in meters above sealevel, and a negative `altitude` represents the same below sealevel. The `capturedAt` timestamp can differ from the value returned by `ExifMap::getCapturedAt()` as it is derived from the `GPSDateStamp` and `GPSTimeStamp` tags if both are present.
 
 ### Binary Conversion
 
