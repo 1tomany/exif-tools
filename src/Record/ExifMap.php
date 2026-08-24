@@ -81,7 +81,7 @@ final class ExifMap implements \Countable, \IteratorAggregate, \Stringable
      * by analyzing the following tags in this order:
      * DateTimeOriginal, DateTimeDigitized, and DateTime.
      */
-    public function capturedAt(): ?\DateTimeImmutable
+    public function getCapturedAt(): ?\DateTimeImmutable
     {
         $dateTimeTags = [
             'DateTimeOriginal',

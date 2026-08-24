@@ -30,7 +30,7 @@ if ($name = $exifTags->get('FileName')) {
     printf("FileName: %s\n", (string) $name);
 }
 
-if (null !== $capturedAt = $exifTags->capturedAt()) {
+if (null !== $capturedAt = $exifTags->getCapturedAt()) {
     printf("CapturedAt: %s\n", $capturedAt->format('Y-m-d H:i:s'));
 }
 
