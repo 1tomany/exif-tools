@@ -1,56 +1,67 @@
+#!/usr/bin/env php
 <?php
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-$separator = function (int $length = 60): void {
-    printf("%s\n", str_repeat('-', $length));
+use OneToMany\ExifTools\Reader\ExifTagReader;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableSeparator;
+use Symfony\Component\Console\SingleCommandApplication;
+use Symfony\Component\Console\Style\SymfonyStyle;
+
+$command = function (SymfonyStyle $io): int {
+    $io->title('exif-tools Examples');
+
+    $exifTagReader = new ExifTagReader();
+
+    // Photo with ComponentsConfiguration tag containing multiple control characters
+    $exifTags = $exifTagReader->read($file = __DIR__.'/../config/files/ComponentsConfiguration.jpeg');
+
+    $exifList = [];
+
+    foreach (['ComponentsConfiguration'] as $tag) {
+        $exifList[$tag] = $exifTags->get($tag);
+    }
+
+    $io->section(basename($file));
+    $io->table(array_keys($exifList), [$exifList]);
+
+    // Photo with creation timestamp, GPS coordinates, and altitude
+    $exifTags = $exifTagReader->read($file = __DIR__.'/../config/files/GPSCoordinates.jpeg');
+
+    $exifList = [];
+
+    if (null !== $capturedAt = $exifTags->getCapturedAt()) {
+        $exifList['CapturedAt'] = $capturedAt->format('c');
+    }
+
+    if (null !== $gps = $exifTags->gps()) {
+        $exifList['Latitude'] = $gps->getLatitude(false);
+        $exifList['Longitude'] = $gps->getLongitude(false);
+        $exifList['Altitude'] = $gps->getAltitude(false);
+
+        if (null !== $capturedAt = $gps->getCapturedAt()) {
+            $exifList['GPSCapturedAt'] = $capturedAt->format('c');
+        }
+    }
+
+    $io->section(basename($file));
+    $io->table(array_keys($exifList), [$exifList]);
+
+    // Photo with SceneType tag containing a single control character
+    $exifTags = $exifTagReader->read($file = __DIR__.'/../config/files/SceneType.jpeg');
+
+    $exifList = [];
+
+    foreach (['Make', 'Model', 'Software', 'SceneType'] as $tag) {
+        $exifList[$tag] = $exifTags->get($tag);
+    }
+
+    $io->section(basename($file));
+    $io->table(array_keys($exifList), [$exifList]);
+
+    return Command::SUCCESS;
 };
 
-$exifTagReader = new OneToMany\ExifTools\Reader\ExifTagReader();
-
-$separator();
-
-// Photo with ComponentsConfiguration tag containing multiple control characters
-$exifTags = $exifTagReader->read(__DIR__.'/../config/files/ComponentsConfiguration.jpeg');
-
-if ($name = $exifTags->get('FileName')) {
-    printf("FileName: %s\n", (string) $name);
-}
-
-if ($componentsConfiguration = $exifTags->get('ComponentsConfiguration')) {
-    printf("ComponentsConfiguration: %s\n", (string) $componentsConfiguration);
-}
-
-$separator();
-
-// Photo with creation timestamp, GPS coordinates, and altitude
-$exifTags = $exifTagReader->read(__DIR__.'/../config/files/GPSCoordinates.jpeg');
-
-if ($name = $exifTags->get('FileName')) {
-    printf("FileName: %s\n", (string) $name);
-}
-
-if (null !== $capturedAt = $exifTags->getCapturedAt()) {
-    printf("CapturedAt: %s\n", $capturedAt->format('Y-m-d H:i:s'));
-}
-
-if (true === ($gps = $exifTags->gps())->isValid()) {
-    printf("Latitude: %s\n", $gps->getLatitude());
-    printf("Longitude: %s\n", $gps->getLongitude());
-    printf("Altitude: %sm\n", $gps->getAltitude());
-}
-
-$separator();
-
-// Photo with SceneType tag containing a single control character
-$exifTags = $exifTagReader->read(__DIR__.'/../config/files/SceneType.jpeg');
-
-if ($name = $exifTags->get('FileName')) {
-    printf("FileName: %s\n", (string) $name);
-}
-
-if ($sceneType = $exifTags->get('SceneType')) {
-    printf("SceneType: %s\n", (string) $sceneType);
-}
-
-$separator();
+new SingleCommandApplication()->setName('exif-tools Examples')->setCode($command)->run();
