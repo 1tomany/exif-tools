@@ -11,7 +11,7 @@ $exifTagReader = new OneToMany\ExifTools\Reader\ExifTagReader();
 $separator();
 
 // Photo with ComponentsConfiguration tag containing multiple control characters
-$exifTags = $exifTagReader->read(__DIR__.'/.data/ComponentsConfiguration.jpeg');
+$exifTags = $exifTagReader->read(__DIR__.'/../config/files/ComponentsConfiguration.jpeg');
 
 if ($name = $exifTags->get('FileName')) {
     printf("FileName: %s\n", (string) $name);
@@ -24,7 +24,7 @@ if ($componentsConfiguration = $exifTags->get('ComponentsConfiguration')) {
 $separator();
 
 // Photo with creation timestamp, GPS coordinates, and altitude
-$exifTags = $exifTagReader->read(__DIR__.'/.data/GPSCoordinates.jpeg');
+$exifTags = $exifTagReader->read(__DIR__.'/../config/files/GPSCoordinates.jpeg');
 
 if ($name = $exifTags->get('FileName')) {
     printf("FileName: %s\n", (string) $name);
@@ -43,7 +43,7 @@ if (true === ($gps = $exifTags->gps())->isValid()) {
 $separator();
 
 // Photo with SceneType tag containing a single control character
-$exifTags = $exifTagReader->read(__DIR__.'/.data/SceneType.jpeg');
+$exifTags = $exifTagReader->read(__DIR__.'/../config/files/SceneType.jpeg');
 
 if ($name = $exifTags->get('FileName')) {
     printf("FileName: %s\n", (string) $name);
