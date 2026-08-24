@@ -14,7 +14,7 @@ final class ExifTagReaderTest extends TestCase
     public function testReadingFileRequiresReadableFile(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The file "invalid_photo.jpeg" is not readable.');
+        $this->expectExceptionMessageIs('The file "invalid_photo.jpeg" is not readable.');
 
         new ExifTagReader()->read('invalid_photo.jpeg');
     }
@@ -26,27 +26,27 @@ final class ExifTagReaderTest extends TestCase
         $this->assertFileIsReadable($path);
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The file "'.$path.'" is not a valid image.');
+        $this->expectExceptionMessageIs('The file "'.$path.'" is not a valid image.');
 
         new ExifTagReader()->read($path);
     }
 
     public function testReadingFileRequiresImageWithExifData(): void
     {
-        $path = __DIR__.'/../.data/no-exif.png';
+        $path = __DIR__.'/../../config/files/no-exif.png';
 
         $this->assertFileExists($path);
         $this->assertFileIsReadable($path);
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Reading the EXIF data from the file "'.$path.'" failed.');
+        $this->expectExceptionMessageIs('Reading the EXIF data from the file "'.$path.'" failed.');
 
         new ExifTagReader()->read($path);
     }
 
     public function testReadingSafelySuppressesExceptions(): void
     {
-        $path = __DIR__.'/../.data/no-exif.png';
+        $path = __DIR__.'/../../config/files/no-exif.png';
 
         $this->assertFileExists($path);
         $this->assertFileIsReadable($path);

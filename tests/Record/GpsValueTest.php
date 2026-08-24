@@ -3,6 +3,8 @@
 namespace OneToMany\ExifTools\Tests\Record;
 
 use OneToMany\ExifTools\Exception\InvalidArgumentException;
+use OneToMany\ExifTools\Record\ExifMap;
+use OneToMany\ExifTools\Record\ExifValue;
 use OneToMany\ExifTools\Record\GpsValue;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -21,7 +23,7 @@ final class GpsValueTest extends TestCase
         $this->assertTrue($latitude < -90 || $latitude > 90, sprintf('Latitude = %d', $latitude));
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The latitude "'.GpsValue::toDecimal($latitude, 8).'" must be between -90 and +90.');
+        $this->expectExceptionMessageIs('The latitude "'.GpsValue::toDecimal($latitude, 8).'" must be between -90 and +90.');
 
         new GpsValue($latitude, null, null);
     }
@@ -32,7 +34,7 @@ final class GpsValueTest extends TestCase
         $longitude = (0 === random_int(0, 1) ? -1 : 1) * random_int(181, 360);
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The longitude "'.GpsValue::toDecimal($longitude, 8).'" must be between -180 and +180.');
+        $this->expectExceptionMessageIs('The longitude "'.GpsValue::toDecimal($longitude, 8).'" must be between -180 and +180.');
 
         new GpsValue(null, $longitude, null);
     }
@@ -44,9 +46,53 @@ final class GpsValueTest extends TestCase
         $this->assertTrue($altitude < GpsValue::MARIANA_TRENCH_DEPTH, sprintf('Altitude = %d', $altitude));
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The altitude "'.GpsValue::toDecimal($altitude, 2).'" must be greater than or equal to '.GpsValue::MARIANA_TRENCH_DEPTH.'.');
+        $this->expectExceptionMessageIs('The altitude "'.GpsValue::toDecimal($altitude, 2).'" must be greater than or equal to '.GpsValue::MARIANA_TRENCH_DEPTH.'.');
 
         new GpsValue(null, null, $altitude);
+    }
+
+    public function testCapturedAtDefaultsToNull(): void
+    {
+        $this->assertNull(new GpsValue()->getCapturedAt());
+    }
+
+    public function testConstructorResolvesCapturedAt(): void
+    {
+        $gps = new GpsValue(
+            gpsDateStamp: new ExifValue('2025:08:24'),
+            gpsTimeStamp: new ExifValue(['12/1', '34/1', '56789/1000']),
+        );
+
+        $this->assertSame('2025-08-24T12:34:56.000000+00:00', $gps->getCapturedAt()?->format('Y-m-d\TH:i:s.uP'));
+    }
+
+    public function testCapturedAtIsCreatedFromGpsDateAndTime(): void
+    {
+        $gps = new ExifMap([
+            'GPSDateStamp' => '2025:08:24',
+            'GPSTimeStamp' => ['12/1', '34/1', '56789/1000'],
+        ])->gps();
+
+        $this->assertSame('2025-08-24T12:34:56.000000+00:00', $gps->getCapturedAt()?->format('Y-m-d\TH:i:s.uP'));
+    }
+
+    public function testCapturedAtRequiresGPSDateStampAndGPSTimeStamp(): void
+    {
+        $noGPSTimeStampValues = [
+            'GPSDateStamp' => '2025:08:25',
+        ];
+
+        $this->assertNull(new ExifMap($noGPSTimeStampValues)->gps()->getCapturedAt());
+
+        $noGPSDateStampValue = [
+            'GPSTimeStamp' => [
+                '12/1',
+                '30/1',
+                '56/1',
+            ],
+        ];
+
+        $this->assertNull(new ExifMap($noGPSDateStampValue)->gps()->getCapturedAt());
     }
 
     public function testAllReturnsCoordinatePair(): void
@@ -57,8 +103,8 @@ final class GpsValueTest extends TestCase
         $coordinates = new GpsValue($latitude, $longitude)->all();
 
         $this->assertCount(2, $coordinates);
-        $this->assertSame(GpsValue::toDecimal($latitude, 8), $coordinates[0]);
-        $this->assertSame(GpsValue::toDecimal($longitude, 8), $coordinates[1]);
+        $this->assertSame(GpsValue::toDecimal($latitude, 7), $coordinates[0]);
+        $this->assertSame(GpsValue::toDecimal($longitude, 7), $coordinates[1]);
     }
 
     public function testIsNotValidWithNullLatitude(): void

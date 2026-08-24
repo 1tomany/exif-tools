@@ -5,6 +5,7 @@ namespace OneToMany\ExifTools\Record;
 use OneToMany\ExifTools\Exception\InvalidArgumentException;
 
 use function bcdiv;
+use function floor;
 use function in_array;
 use function number_format;
 use function round;
@@ -14,7 +15,12 @@ use function trim;
 
 final readonly class GpsValue
 {
+    public const int ALTITUDE_SCALE = 2;
+    public const int LATLONG_SCALE = 7;
+
     public const int MARIANA_TRENCH_DEPTH = -10984;
+
+    public ?\DateTimeImmutable $capturedAt;
 
     /**
      * @throws InvalidArgumentException if $latitude is not null and less than -90.0 or greater than 90.0
@@ -25,6 +31,8 @@ final readonly class GpsValue
         public int|float|null $latitude = null,
         public int|float|null $longitude = null,
         public int|float|null $altitude = null,
+        ?ExifValue $gpsDateStamp = null,
+        ?ExifValue $gpsTimeStamp = null,
     ) {
         if (null !== $latitude && ($latitude < -90.0 || $latitude > 90.0)) {
             throw new InvalidArgumentException(sprintf('The latitude "%s" must be between -90 and +90.', self::toDecimal($latitude, 8)));
@@ -37,6 +45,8 @@ final readonly class GpsValue
         if (null !== $altitude && $altitude < self::MARIANA_TRENCH_DEPTH) {
             throw new InvalidArgumentException(sprintf('The altitude "%s" must be greater than or equal to %d.', self::toDecimal($altitude, 2), self::MARIANA_TRENCH_DEPTH));
         }
+
+        $this->capturedAt = $this->resolveCapturedAt($gpsDateStamp, $gpsTimeStamp);
     }
 
     /**
@@ -52,6 +62,8 @@ final readonly class GpsValue
         ?ExifValue $gpsLongitudeRef,
         ?ExifValue $gpsAltitude = null,
         ?ExifValue $gpsAltitudeRef = null,
+        ?ExifValue $gpsDateStamp = null,
+        ?ExifValue $gpsTimeStamp = null,
     ): self {
         $latitude = $longitude = $altitude = null;
 
@@ -88,7 +100,7 @@ final readonly class GpsValue
             }
         }
 
-        return new self($latitude, $longitude, $altitude);
+        return new self($latitude, $longitude, $altitude, $gpsDateStamp, $gpsTimeStamp);
     }
 
     /**
@@ -111,60 +123,106 @@ final readonly class GpsValue
      */
     public function all(): array
     {
-        return [
-            $this->getLatitudeDecimal(),
-            $this->getLongitudeDecimal(),
-        ];
-    }
-
-    public function getLatitude(): ?float
-    {
-        return $this->latitude;
+        return [$this->getLatitude(false), $this->getLongitude(false)];
     }
 
     /**
-     * @return ?numeric-string
+     * @return ($asFloat is true ? ?float : ?numeric-string)
      */
-    public function getLatitudeDecimal(int $scale = 8): ?string
+    public function getLatitude(bool $asFloat = true, int $scale = self::LATLONG_SCALE): float|string|null
     {
-        return self::toDecimal($this->latitude, $scale);
-    }
-
-    public function getLongitude(): ?float
-    {
-        return $this->longitude;
+        return $asFloat ? $this->latitude : self::toDecimal($this->latitude, $scale);
     }
 
     /**
-     * @return ?numeric-string
+     * @return ($asFloat is true ? ?float : ?numeric-string)
      */
-    public function getLongitudeDecimal(int $scale = 8): ?string
+    public function getLongitude(bool $asFloat = true, int $scale = self::LATLONG_SCALE): float|string|null
     {
-        return self::toDecimal($this->longitude, $scale);
+        return $asFloat ? $this->longitude : self::toDecimal($this->longitude, $scale);
     }
 
-    public function getAltitude(): ?float
+    /**
+     * @return ($asFloat is true ? ?float : ?numeric-string)
+     */
+    public function getAltitude(bool $asFloat = true, int $scale = self::ALTITUDE_SCALE): float|string|null
     {
-        return $this->altitude;
+        return $asFloat ? $this->altitude : self::toDecimal($this->altitude, $scale);
     }
 
-    public function getAltitudeDecimal(int $scale = 2): ?string
+    public function getCapturedAt(): ?\DateTimeImmutable
     {
-        return self::toDecimal($this->altitude, $scale);
+        return $this->capturedAt;
     }
 
     /**
      * @phpstan-assert-if-true float $this->latitude
      * @phpstan-assert-if-true float $this->getLatitude()
-     * @phpstan-assert-if-true numeric-string $this->getLatitudeDecimal()
      * @phpstan-assert-if-true float $this->longitude
      * @phpstan-assert-if-true float $this->getLongitude()
-     * @phpstan-assert-if-true numeric-string $this->getLongitudeDecimal()
      * @phpstan-assert-if-true array{0: numeric-string, 1: numeric-string} $this->all()
      */
     public function isValid(): bool
     {
         return null !== $this->latitude && null !== $this->longitude;
+    }
+
+    private function resolveCapturedAt(
+        ?ExifValue $gpsDateStamp,
+        ?ExifValue $gpsTimeStamp,
+    ): ?\DateTimeImmutable {
+        if (
+            !$gpsDateStamp?->isString()
+            || !$gpsTimeStamp?->isList()
+        ) {
+            return null;
+        }
+
+        try {
+            $capturedAt = \DateTimeImmutable::createFromFormat('Y:m:d', $gpsDateStamp->get());
+        } catch (\DateException) {
+            return null;
+        }
+
+        if (!$capturedAt) {
+            return null;
+        }
+
+        $ts = $gpsTimeStamp->get();
+
+        [$h, $m, $s] = [
+            $ts->get(0)?->toFloat(),
+            $ts->get(1)?->toFloat(),
+            $ts->get(2)?->toFloat(),
+        ];
+
+        if (
+            null === $h
+            || null === $m
+            || null === $s
+        ) {
+            return $capturedAt;
+        }
+
+        $h = (int) floor($h);
+
+        if ($h < 0 || $h >= 24) {
+            return $capturedAt;
+        }
+
+        $m = (int) floor($m);
+
+        if ($m < 0 || $m >= 60) {
+            return $capturedAt;
+        }
+
+        $s = (int) floor($s);
+
+        if ($s < 0 || $s >= 60) {
+            return $capturedAt;
+        }
+
+        return $capturedAt->setTime($h, $m, $s);
     }
 
     /**

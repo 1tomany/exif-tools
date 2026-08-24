@@ -81,7 +81,7 @@ final class ExifMap implements \Countable, \IteratorAggregate, \Stringable
      * by analyzing the following tags in this order:
      * DateTimeOriginal, DateTimeDigitized, and DateTime.
      */
-    public function capturedAt(): ?\DateTimeImmutable
+    public function getCapturedAt(): ?\DateTimeImmutable
     {
         $dateTimeTags = [
             'DateTimeOriginal',
@@ -114,6 +114,8 @@ final class ExifMap implements \Countable, \IteratorAggregate, \Stringable
             $this->get('GPSLongitudeRef'),
             $this->get('GPSAltitude'),
             $this->get('GPSAltitudeRef'),
+            $this->get('GPSDateStamp'),
+            $this->get('GPSTimeStamp'),
         );
 
         return $this->gps;

@@ -1,5 +1,5 @@
 /.build export-ignore
-/examples export-ignore
+/config export-ignore
 /tests export-ignore
 /.editorconfig export-ignore
 /.gitattributes export-ignore
