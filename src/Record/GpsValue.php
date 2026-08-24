@@ -15,6 +15,9 @@ use function trim;
 
 final readonly class GpsValue
 {
+    public const int ALTITUDE_SCALE = 2;
+    public const int LATLONG_SCALE = 7;
+
     public const int MARIANA_TRENCH_DEPTH = -10984;
 
     public ?\DateTimeImmutable $capturedAt;
@@ -129,41 +132,25 @@ final readonly class GpsValue
     /**
      * @return ($asFloat is true ? ?float : ?numeric-string)
      */
-    public function getLatitude(bool $asFloat = true): float|string|null
+    public function getLatitude(bool $asFloat = true, int $scale = self::LATLONG_SCALE): float|string|null
     {
-        return $asFloat ? $this->latitude : self::toDecimal($this->latitude, 7);
-    }
-
-    /**
-     * @return ?numeric-string
-     */
-    public function getLatitudeDecimal(int $scale = 8): ?string
-    {
-        return self::toDecimal($this->latitude, $scale);
+        return $asFloat ? $this->latitude : self::toDecimal($this->latitude, $scale);
     }
 
     /**
      * @return ($asFloat is true ? ?float : ?numeric-string)
      */
-    public function getLongitude(bool $asFloat = true): float|string|null
+    public function getLongitude(bool $asFloat = true, int $scale = self::LATLONG_SCALE): float|string|null
     {
-        return $asFloat ? $this->longitude : self::toDecimal($this->longitude, 7);
-    }
-
-    /**
-     * @return ?numeric-string
-     */
-    public function getLongitudeDecimal(int $scale = 8): ?string
-    {
-        return self::toDecimal($this->longitude, $scale);
+        return $asFloat ? $this->longitude : self::toDecimal($this->longitude, $scale);
     }
 
     /**
      * @return ($asFloat is true ? ?float : ?numeric-string)
      */
-    public function getAltitude(bool $asFloat = true): float|string|null
+    public function getAltitude(bool $asFloat = true, int $scale = self::ALTITUDE_SCALE): float|string|null
     {
-        return $asFloat ? $this->altitude : self::toDecimal($this->altitude, 2);
+        return $asFloat ? $this->altitude : self::toDecimal($this->altitude, $scale);
     }
 
     public function getAltitudeDecimal(int $scale = 2): ?string
@@ -179,10 +166,8 @@ final readonly class GpsValue
     /**
      * @phpstan-assert-if-true float $this->latitude
      * @phpstan-assert-if-true float $this->getLatitude()
-     * @phpstan-assert-if-true numeric-string $this->getLatitudeDecimal()
      * @phpstan-assert-if-true float $this->longitude
      * @phpstan-assert-if-true float $this->getLongitude()
-     * @phpstan-assert-if-true numeric-string $this->getLongitudeDecimal()
      * @phpstan-assert-if-true array{0: numeric-string, 1: numeric-string} $this->all()
      */
     public function isValid(): bool
