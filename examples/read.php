@@ -16,48 +16,57 @@ $command = function (SymfonyStyle $io): int {
     // Photo with ComponentsConfiguration tag containing multiple control characters
     $exifTags = $exifTagReader->read($file = __DIR__.'/../config/files/ComponentsConfiguration.jpeg');
 
-    $exifList = [];
+    $tableData = [];
 
     foreach (['ComponentsConfiguration'] as $tag) {
-        $exifList[$tag] = $exifTags->get($tag);
+        $tableData[$tag] = $exifTags->get($tag);
     }
 
     $io->section(basename($file));
-    $io->table(array_keys($exifList), [$exifList]);
+
+    $io->table(array_keys($tableData), [
+        array_values($tableData),
+    ]);
 
     // Photo with creation timestamp, GPS coordinates, and altitude
     $exifTags = $exifTagReader->read($file = __DIR__.'/../config/files/GPSCoordinates.jpeg');
 
-    $exifList = [];
+    $tableData = [];
 
     if (null !== $capturedAt = $exifTags->getCapturedAt()) {
-        $exifList['CapturedAt'] = $capturedAt->format('c');
+        $tableData['CapturedAt'] = $capturedAt->format('c');
     }
 
     if (null !== $gps = $exifTags->gps()) {
-        $exifList['Latitude'] = $gps->getLatitude(false);
-        $exifList['Longitude'] = $gps->getLongitude(false);
-        $exifList['Altitude'] = $gps->getAltitude(false);
+        $tableData['Latitude'] = $gps->getLatitude(false);
+        $tableData['Longitude'] = $gps->getLongitude(false);
+        $tableData['Altitude'] = $gps->getAltitude(false);
 
         if (null !== $capturedAt = $gps->getCapturedAt()) {
-            $exifList['GPSCapturedAt'] = $capturedAt->format('c');
+            $tableData['GPSCapturedAt'] = $capturedAt->format('c');
         }
     }
 
     $io->section(basename($file));
-    $io->table(array_keys($exifList), [$exifList]);
+
+    $io->table(array_keys($tableData), [
+        array_values($tableData),
+    ]);
 
     // Photo with SceneType tag containing a single control character
     $exifTags = $exifTagReader->read($file = __DIR__.'/../config/files/SceneType.jpeg');
 
-    $exifList = [];
+    $tableData = [];
 
     foreach (['Make', 'Model', 'Software', 'SceneType'] as $tag) {
-        $exifList[$tag] = $exifTags->get($tag);
+        $tableData[$tag] = $exifTags->get($tag);
     }
 
     $io->section(basename($file));
-    $io->table(array_keys($exifList), [$exifList]);
+
+    $io->table(array_keys($tableData), [
+        array_values($tableData),
+    ]);
 
     return Command::SUCCESS;
 };
