@@ -233,7 +233,7 @@ final class ExifValueTest extends TestCase
     public function testToFloatRequiresScalar(): void
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('Non-scalar values cannot be converted to floats.');
+        $this->expectExceptionMessageIs('Non-scalar values cannot be converted to floats.');
 
         new ExifValue([1, 2, 3])->toFloat();
     }
