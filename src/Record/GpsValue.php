@@ -123,10 +123,7 @@ final readonly class GpsValue
      */
     public function all(): array
     {
-        return [
-            $this->getLatitude(false),
-            $this->getLongitude(false),
-        ];
+        return [$this->getLatitude(false), $this->getLongitude(false)];
     }
 
     /**
@@ -151,11 +148,6 @@ final readonly class GpsValue
     public function getAltitude(bool $asFloat = true, int $scale = self::ALTITUDE_SCALE): float|string|null
     {
         return $asFloat ? $this->altitude : self::toDecimal($this->altitude, $scale);
-    }
-
-    public function getAltitudeDecimal(int $scale = 2): ?string
-    {
-        return self::toDecimal($this->altitude, $scale);
     }
 
     public function getCapturedAt(): ?\DateTimeImmutable
