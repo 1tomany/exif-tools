@@ -37,12 +37,14 @@ $command = function (SymfonyStyle $io): int {
         $tableData['CapturedAt'] = $capturedAt->format('c');
     }
 
-    $tableData['Latitude'] = $exifTags->gps()->getLatitude(false);
-    $tableData['Longitude'] = $exifTags->gps()->getLongitude(false);
-    $tableData['Altitude'] = $exifTags->gps()->getAltitude(false);
+    if (true === ($gps = $exifTags->gps())->isValid()) {
+        $tableData['Latitude'] = $gps->getLatitude(false);
+        $tableData['Longitude'] = $gps->getLongitude(false);
+        $tableData['Altitude'] = $gps->getAltitude(false);
 
-    if ($capturedAt = $exifTags->gps()->getCapturedAt()) {
-        $tableData['GPSCapturedAt'] = $capturedAt->format('c');
+        if (null !== $capturedAt = $gps->getCapturedAt()) {
+            $tableData['GPSCapturedAt'] = $capturedAt->format('c');
+        }
     }
 
     $io->section(basename($file));
