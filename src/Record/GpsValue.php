@@ -121,14 +121,17 @@ final readonly class GpsValue
     public function all(): array
     {
         return [
-            $this->getLatitudeDecimal(),
-            $this->getLongitudeDecimal(),
+            $this->getLatitude(false),
+            $this->getLongitude(false),
         ];
     }
 
-    public function getLatitude(): ?float
+    /**
+     * @return ($asFloat is true ? ?float : ?numeric-string)
+     */
+    public function getLatitude(bool $asFloat = true): float|string|null
     {
-        return $this->latitude;
+        return $asFloat ? $this->latitude : self::toDecimal($this->latitude, 7);
     }
 
     /**
@@ -139,9 +142,12 @@ final readonly class GpsValue
         return self::toDecimal($this->latitude, $scale);
     }
 
-    public function getLongitude(): ?float
+    /**
+     * @return ($asFloat is true ? ?float : ?numeric-string)
+     */
+    public function getLongitude(bool $asFloat = true): float|string|null
     {
-        return $this->longitude;
+        return $asFloat ? $this->longitude : self::toDecimal($this->longitude, 7);
     }
 
     /**

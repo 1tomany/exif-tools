@@ -103,8 +103,8 @@ final class GpsValueTest extends TestCase
         $coordinates = new GpsValue($latitude, $longitude)->all();
 
         $this->assertCount(2, $coordinates);
-        $this->assertSame(GpsValue::toDecimal($latitude, 8), $coordinates[0]);
-        $this->assertSame(GpsValue::toDecimal($longitude, 8), $coordinates[1]);
+        $this->assertSame(GpsValue::toDecimal($latitude, 7), $coordinates[0]);
+        $this->assertSame(GpsValue::toDecimal($longitude, 7), $coordinates[1]);
     }
 
     public function testIsNotValidWithNullLatitude(): void
