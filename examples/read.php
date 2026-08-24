@@ -35,9 +35,9 @@ if (null !== $capturedAt = $exifTags->getCapturedAt()) {
 }
 
 if (true === ($gps = $exifTags->gps())->isValid()) {
-    printf("Latitude: %s\n", $gps->getLatitudeDecimal());
-    printf("Longitude: %s\n", $gps->getLongitudeDecimal());
-    printf("Altitude: %sm\n", $gps->getAltitudeDecimal());
+    printf("Latitude: %s\n", $gps->getLatitude());
+    printf("Longitude: %s\n", $gps->getLongitude());
+    printf("Altitude: %sm\n", $gps->getAltitude());
 }
 
 $separator();

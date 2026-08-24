@@ -152,9 +152,12 @@ final readonly class GpsValue
         return self::toDecimal($this->longitude, $scale);
     }
 
-    public function getAltitude(): ?float
+    /**
+     * @return ($asFloat is true ? ?float : ?numeric-string)
+     */
+    public function getAltitude(bool $asFloat = true): float|string|null
     {
-        return $this->altitude;
+        return $asFloat ? $this->altitude : self::toDecimal($this->altitude, 2);
     }
 
     public function getAltitudeDecimal(int $scale = 2): ?string
